@@ -10,7 +10,9 @@ import PublicGroup from "./pages/group/publicGroup";
 import PrivateGroup from "./pages/group/privateGroup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NoneData from "./pages/group/noneData";
+import MakeGroup from "./pages/group/makeGroup";
 //import PrivateList from "./components/privateList";
+import PrivateAccess from "./pages/group/privateAccess";
 
 function App() {
   return (
@@ -19,7 +21,9 @@ function App() {
       <Routes>
         <Route path="/" element={<PublicGroup />} />
         <Route path="/test" element={<PrivateGroup />} />
-        <Route path="/test/none" element={<NoneData/>}/>
+        <Route path="/test/none" element={<NoneData />} />
+        <Route path="/group/create" element={<MakeGroup />} />
+        <Route path="/group/access" element={<PrivateAccess />} />
       </Routes>
     </BrowserRouter>
   );
