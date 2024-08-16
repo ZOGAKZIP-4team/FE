@@ -13,6 +13,9 @@ import NoneData from "./pages/group/noneData";
 import MakeGroup from "./pages/group/makeGroup";
 //import PrivateList from "./components/privateList";
 import PrivateAccess from "./pages/group/privateAccess";
+import PublicGroupDetail from "./pages/group/publicGroupDetail";
+import PrivateGroupDetail from "./pages/group/privateGroupDetail";
+import DetailNoneData from "./pages/group/detailNoneData";
 
 function App() {
   return (
@@ -24,6 +27,15 @@ function App() {
         <Route path="/test/none" element={<NoneData />} />
         <Route path="/group/create" element={<MakeGroup />} />
         <Route path="/group/access" element={<PrivateAccess />} />
+        <Route
+          path="/group/detail/public"
+          element={<PublicGroupDetail />}
+        ></Route>
+        <Route
+          path="/group/detail/private"
+          element={<PrivateGroupDetail />}
+        ></Route>
+        <Route path="/group/detail/none" element={<DetailNoneData/>}></Route>
       </Routes>
     </BrowserRouter>
   );

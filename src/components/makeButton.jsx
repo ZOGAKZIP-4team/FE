@@ -1,11 +1,8 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
-const MakeButton = () => {
-  return (
-    <OutContainer>
-      <Text />
-    </OutContainer>
-  );
+const MakeButton = ({ title }) => {
+  return <OutContainer>{title}</OutContainer>;
 };
 
 export default MakeButton;
@@ -16,14 +13,15 @@ const OutContainer = styled.button`
   height: 45px;
   background-color: #282828;
   border-radius: 6px;
-`;
-
-const Text = styled.h1`
-  display: flex;
-  width: 66px;
-  height: 18px;
   font-size: 14px;
   font-weight: 700;
-  text-align: center;
+  text-align: center; 
   color: white;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto; // 오른쪽 끝에 배치하기 위해 추가한 속성
 `;
+
+MakeButton.propTypes = {
+  title: PropTypes.string.isRequired,
+};

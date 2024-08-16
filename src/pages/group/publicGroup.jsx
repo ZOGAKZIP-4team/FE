@@ -45,9 +45,6 @@ export default PublicGroup;
 
 export const OutContaienr = styled.div`
   display: flex;
-  position: absolute;
-  top: 100px;
-  left: 0;
   align-items: center;
   flex-direction: column;
   gap: 60px;
@@ -56,7 +53,6 @@ export const OutContaienr = styled.div`
 `;
 export const TopContainer = styled.div`
   display: flex;
-  justify-content: center;
   width: 90%;
   height: 50px;
   gap: 30px;
@@ -72,7 +68,8 @@ export const ButtonContainer = styled.div`
 
 export const BtnSearchContainer = styled.div`
   display: flex;
-  width: 80%;
+  align-items: center;
+  width: 90%;
   height: 50px;
   padding: 0;
   gap: 20px;
@@ -80,7 +77,7 @@ export const BtnSearchContainer = styled.div`
 
 export const BodyContainer = styled.div`
   display: flex;
-  width: 100%;
+  width: 95%;
   height: 100%;
   justify-content: center;
   align-items: center;

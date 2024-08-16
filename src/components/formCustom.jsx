@@ -56,7 +56,7 @@ const OutContainer = styled.div`
   gap: 10px;
 `;
 
-const FormContainer = styled.div`
+export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 420px;
@@ -66,13 +66,11 @@ const FormContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  width: 117px;
-  height: 30px;
   font-size: 24px;
   font-weight: 700;
 `;
 
-const FormBody = styled.form`
+export const FormBody = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -112,20 +110,20 @@ export const InputBody = styled.input`
   }
 `;
 
-const FileContainer = styled.div`
+export const FileContainer = styled.div`
   display: flex;
   width: 400px;
   height: 45px;
   justify-content: space-between;
 `;
 
-const FileInput = styled(InputBody)`
+export const FileInput = styled(InputBody)`
   display: flex;
   width: 290px;
   height: 45px;
 `;
 
-const FileButton = styled.button`
+export const FileButton = styled.button`
   display: flex;
   width: 100px;
   height: 45px;
@@ -137,14 +135,14 @@ const FileButton = styled.button`
   background-color: transparent;
 `;
 
-const TextareaContainer = styled.div`
+export const TextareaContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 400px;
   height: 150px;
 `;
 
-const TextareaBody = styled.textarea`
+export const TextareaBody = styled.textarea`
   display: flex;
   width: 400px;
   height: 120px;
@@ -159,21 +157,21 @@ const TextareaBody = styled.textarea`
   }
 `;
 
-const SelectContainer = styled.div`
+export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 400px;
   height: 64px;
 `;
 
-const RowContainer = styled.div`
+export const RowContainer = styled.div`
   display: flex;
   width: 94px;
   height: 24px;
   justify-content: space-between;
 `;
 
-const SmallText = styled.h1`
+export const SmallText = styled.h1`
   font-size: 14px;
   font-weight: 400;
 `;
