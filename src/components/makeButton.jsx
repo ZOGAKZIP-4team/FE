@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-const MakeButton = ({ title }) => {
-  return <OutContainer>{title}</OutContainer>;
+const MakeButton = ({ title, onClick }) => {
+  return <OutContainer onClick={onClick}>{title}</OutContainer>;
 };
 
 export default MakeButton;
@@ -24,4 +24,5 @@ const OutContainer = styled.button`
 
 MakeButton.propTypes = {
   title: PropTypes.string.isRequired,
+  onClick: PropTypes.func
 };
