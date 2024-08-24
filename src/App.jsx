@@ -16,6 +16,8 @@ import PrivateAccess from "./pages/group/privateAccess";
 import PublicGroupDetail from "./pages/group/publicGroupDetail";
 import PrivateGroupDetail from "./pages/group/privateGroupDetail";
 import DetailNoneData from "./pages/group/detailNoneData";
+import MemoryModal from "./pages/memory/memoryModal";
+import MemoryDetail from "./pages/memory/memoryDetail";
 
 function App() {
   return (
@@ -26,7 +28,17 @@ function App() {
         <Route path="/test" element={<PrivateGroup />} />
         <Route path="/test/none" element={<NoneData />} />
         <Route path="/group/create" element={<MakeGroup />} />
-        <Route path="/group/access" element={<PrivateAccess />} />
+        <Route
+          path="/group/access"
+          element={
+            <PrivateAccess
+              title={"비공개 그룹"}
+              content={"비공개 그룹에 접근하기 위해 권한 확인이 필요합니다."}
+              hint={"그룹 비밀번호를 입력해 주세요"}
+            />
+          }
+        />
+        <Route path="/test/modal" element={<MemoryModal />} />
         <Route
           path="/group/detail/public"
           element={<PublicGroupDetail />}
@@ -35,7 +47,18 @@ function App() {
           path="/group/detail/private"
           element={<PrivateGroupDetail />}
         ></Route>
-        <Route path="/group/detail/none" element={<DetailNoneData/>}></Route>
+        <Route path="/group/detail/none" element={<DetailNoneData />}></Route>
+        <Route
+          path="/memory/access"
+          element={
+            <PrivateAccess
+              title={"비공개 추억"}
+              content={"비공개 추억에 접근하기 위해 권한 확인이 필요합니다."}
+              hint={"그룹 비밀번호를 입력해 주세요"}
+            />
+          }
+        />
+        <Route path="/memory/detail" element={<MemoryDetail />} />
       </Routes>
     </BrowserRouter>
   );

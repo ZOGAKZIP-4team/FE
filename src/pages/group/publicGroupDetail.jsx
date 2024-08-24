@@ -58,6 +58,7 @@ export const Bar = styled.hr`
   width: 92%;
   color: #dddddd;
 `;
+
 export const BodyContainer = styled.div`
   display: flex;
   flex-direction: column;

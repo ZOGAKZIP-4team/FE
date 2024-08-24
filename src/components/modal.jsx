@@ -3,12 +3,15 @@ import { BackContainer } from "../pages/group/modModal";
 import { Title, InputContainer, InputBody, Label } from "./formCustom";
 import ButtonCustom from "./button";
 import PropTypes from "prop-types";
+import { CloseIcon } from "../pages/memory/memoryModal";
+import close from "../assets/close.svg";
 
 const Modal = ({ title, label, hint, btn }) => {
   return (
     <BackContainer>
       <OutContainer>
         <Title>{title}</Title>
+        <CloseIcon src={close} />
         <FormBody>
           <InputContainer>
             <Label>{label}</Label>
@@ -33,6 +36,7 @@ const OutContainer = styled.div`
   flex-direction: column;
   background-color: white;
   border-radius: 6px;
+  position: relative;
 `;
 
 const FormBody = styled.form`

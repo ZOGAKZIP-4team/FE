@@ -89,7 +89,6 @@ export const InputContainer = styled.div`
 
 export const Label = styled.h1`
   display: flex;
-  width: 96px;
   height: 20px;
   font-size: 16px;
   font-weight: 500;
