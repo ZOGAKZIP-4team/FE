@@ -7,9 +7,7 @@ import Header from "./components/header";
 //import DropDown from "./components/alignDropdown";
 //import AddViewButton from "./components/addViewButton";
 import PublicGroup from "./pages/group/publicGroup";
-import PrivateGroup from "./pages/group/privateGroup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NoneData from "./pages/group/noneData";
 import MakeGroup from "./pages/group/makeGroup";
 //import PrivateList from "./components/privateList";
 import PrivateAccess from "./pages/group/privateAccess";
@@ -25,11 +23,9 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<PublicGroup />} />
-        <Route path="/test" element={<PrivateGroup />} />
-        <Route path="/test/none" element={<NoneData />} />
         <Route path="/group/create" element={<MakeGroup />} />
         <Route
-          path="/group/access"
+          path="/group/access/:groupId"
           element={
             <PrivateAccess
               title={"비공개 그룹"}
@@ -40,11 +36,11 @@ function App() {
         />
         <Route path="/test/modal" element={<MemoryModal />} />
         <Route
-          path="/group/detail/public"
+          path="/group/public/:groupId"
           element={<PublicGroupDetail />}
         ></Route>
         <Route
-          path="/group/detail/private"
+          path="/group/private/:groupId"
           element={<PrivateGroupDetail />}
         ></Route>
         <Route path="/group/detail/none" element={<DetailNoneData />}></Route>

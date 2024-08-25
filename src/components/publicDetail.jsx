@@ -4,17 +4,30 @@ import { DayContainer, Day, PublicY } from "./publicList";
 import seperate from "../assets/seperate.svg";
 import next from "../assets/next.svg";
 import smallIcon from "../assets/smallIcon.svg";
-import publicImg from "../assets/publicImg.svg";
+//import publicImg from "../assets/publicImg.svg";
+import { groupLike } from "../Utils/GroupUtils";
 
-const PublicDetail = ({ onModModal, onDelModal }) => {
+const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
+  // 그룹 공감하기
+  const handleGroupLike = async () => {
+    try {
+      const response = await groupLike(data._id);
+      if (response) {
+        console.log("그룹 공감 성공: ", response);
+      }
+    } catch (error) {
+      console.log("그룹 공감 실패: ", error);
+    }
+  };
+
   return (
     <OutContainer>
-      <PhotoContaienr src={publicImg} />
+      <PhotoContaienr src={data.imageUrl} />
       <BodyContainer>
         <ContentContainer>
           <TopContainer>
             <DayContainer>
-              <Day>D+265</Day>
+              <Day>D+{dayCount}</Day>
               <img src={seperate} />
               <PublicY>공개</PublicY>
             </DayContainer>
@@ -24,33 +37,23 @@ const PublicDetail = ({ onModModal, onDelModal }) => {
             </ModDelContainer>
           </TopContainer>
           <TitleContainer>
-            <Title>
-              달봉이네 가족 달봉이네 가족 어디까지 길어지는 거예요?? 글자수 제한
-              한 줄까지
-            </Title>
-            <NoticeContainer1>추억 8</NoticeContainer1>
+            <Title>{data.name}</Title>
+            <NoticeContainer1>추억 {data.postCount}</NoticeContainer1>
             <img src={seperate} />
-            <NoticeContainer1>그룹 공감 1.5K</NoticeContainer1>
+            <NoticeContainer1>그룹 공감 {data.likeCount}</NoticeContainer1>
           </TitleContainer>
-          <Content>
-            서로 한 마음으로 응원하고 아끼는 달봉이네 가족입니다. 서로 한
-            마음으로 응원하고 아끼는 달봉이네 가족입니다. 서로 한 마음으로
-            응원하고 아끼는 달봉이네 가족입니다. 서로 한 마음으로 응원하고
-            아끼는 달봉이네 가족입니다. 서로 한 마음으로 응원하고 아끼는
-            달봉이네 가족입니다. 그냥 끝까지로 할게요 그리고 두 줄까지만!
-          </Content>
+          <Content>{data.introduction}</Content>
         </ContentContainer>
         <BadgeContainer>
           <BadgeTitle>획득 배지</BadgeTitle>
           <Badges>
-            <BadgeButton>👾 7일 연속 추억 등록</BadgeButton>
-            <BadgeButton>🌼 그룹 공감 1만 개 이상 받기</BadgeButton>
-            <BadgeButton>💖 게시글 공감 1만 개 이상 받기</BadgeButton>
-            <BadgeButton>👾 7일 연속 추억 등록</BadgeButton>
+            {data.badges.map((badge, index) => (
+              <BadgeButton key={index}>{badge}</BadgeButton>
+            ))}
             <NextButton src={next} />
           </Badges>
         </BadgeContainer>
-        <SendButton>
+        <SendButton onClick={handleGroupLike}>
           <img
             src={smallIcon}
             style={{ width: "1.375rem", height: "1.375rem" }}
@@ -67,6 +70,16 @@ export default PublicDetail;
 PublicDetail.propTypes = {
   onModModal: PropTypes.func.isRequired,
   onDelModal: PropTypes.func.isRequired,
+  dayCount: PropTypes.number.isRequired,
+  data: PropTypes.shape({
+    imageUrl: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    postCount: PropTypes.number.isRequired,
+    likeCount: PropTypes.number.isRequired,
+    introduction: PropTypes.string.isRequired,
+    badges: PropTypes.arrayOf(PropTypes.string).isRequired,
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 const OutContainer = styled.div`

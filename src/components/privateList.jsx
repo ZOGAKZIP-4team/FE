@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import smallIcon from "../assets/smallIcon.svg";
 import seperate from "../assets/seperate.svg";
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import {
   DayContainer,
   Day,
@@ -14,32 +16,59 @@ import {
   Icon,
 } from "./publicList";
 
-const PrivateList = () => {
+const PrivateList = ({ data }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    console.log("data 객체: ", data);
+    //navigate(`/group/private/${data._id}`, {state: {dayCount}});
+    navigate(`/group/access/${data._id}`);
+  };
+
+  // createdAt을 Date 객체로 변환하고 현재 날짜와의 차이를 계산
+  const createdAt = new Date(data.createdAt);
+  const currentDate = new Date();
+  const timeDiff = Math.abs(currentDate - createdAt);
+  const dayCount = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
   return (
-    <OuterContainer>
+    <OuterContainer onClick={handleClick}>
       <ContentOutContainer>
         <DayContainer>
-          <Day>D+265</Day>
+          <Day>D+{dayCount}</Day>
           <img src={seperate} />
-          <PublicY>비공개</PublicY>
+          <PublicY>{data.isPublic ? "공개" : "비공개"}</PublicY>
         </DayContainer>
-        <Title>달봉이네 가족</Title>
+        <Title>{data.name}</Title>
         <LookContainer>
           <GetContainer>
             <SmallTitle>추억</SmallTitle>
-            <SmallContent>8</SmallContent>
+            <SmallContent>{data.postCount}</SmallContent>
           </GetContainer>
           <GetContainer>
             <SmallTitle>그룹 공감</SmallTitle>
             <IconContainer>
               <Icon src={smallIcon} />
-              <SmallContent>1.5K</SmallContent>
+              <SmallContent>{data.likeCount}</SmallContent>
             </IconContainer>
           </GetContainer>
         </LookContainer>
       </ContentOutContainer>
     </OuterContainer>
   );
+};
+
+PrivateList.propTypes = {
+  data: PropTypes.shape({
+    imageUrl: PropTypes.string.isRequired,
+    isPublic: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
+    introduction: PropTypes.string.isRequired,
+    badgeCount: PropTypes.number.isRequired,
+    likeCount: PropTypes.number.isRequired,
+    postCount: PropTypes.number.isRequired,
+    createdAt: PropTypes.instanceOf(Date).isRequired,
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default PrivateList;

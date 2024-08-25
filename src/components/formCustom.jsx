@@ -1,7 +1,39 @@
 import styled from "styled-components";
 import ButtonCustom from "./button";
+import { useState } from "react";
+import {
+  groupPost
+} from "../Utils/GroupUtils";
 
 const FormCustom = () => {
+  // 상태 관리
+  const [name, setName] = useState();
+  const [file, setFile] = useState();
+  const [intro, setIntro] = useState();
+  const [isPublic, setIsPublic] = useState(true);
+  const [password, setPassword] = useState();
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleFileButtonClick = () => {
+    document.getElementById("fileInput").click();
+  };
+
+  // 그룹 등록
+  const handleGroupPost = async () => {
+    try {
+      const response = await groupPost(name, file, intro, isPublic, password);
+      if (response) {
+        console.log("그룹 등록 성공: ", response);
+      }
+      console.log("data: ", name, file, intro, isPublic, password);
+    } catch (error) {
+      console.log("그룹 등록 실패: ", error);
+    }
+  };
+
   return (
     <OutContainer>
       <Title>그룹 만들기</Title>
@@ -9,33 +41,67 @@ const FormCustom = () => {
         <FormBody>
           <InputContainer>
             <Label>그룹명</Label>
-            <InputBody placeholder="그룹명을 입력해 주세요" />
+            <InputBody
+              placeholder="그룹명을 입력해 주세요"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </InputContainer>
           <InputContainer>
             <Label>대표 이미지</Label>
             <FileContainer>
-              <FileInput placeholder="파일을 선택해 주세요" />
-              <FileButton>
+              <FileInput
+                id="fileInput"
+                type="file"
+                onChange={handleFileChange}
+              />
+              <HiddenFileInput
+                type="text"
+                placeholder="파일을 선택해 주세요"
+                value={file ? file.name : ""}
+                readOnly
+              />
+              <FileButton onClick={handleFileButtonClick} type="button">
                 <SmallText>파일 선택</SmallText>
               </FileButton>
             </FileContainer>
           </InputContainer>
           <TextareaContainer>
             <Label>그룹 소개</Label>
-            <TextareaBody placeholder="그룹을 소개해 주세요" />
+            <TextareaBody
+              placeholder="그룹을 소개해 주세요"
+              value={intro}
+              onChange={(e) => setIntro(e.target.value)}
+            />
           </TextareaContainer>
           <SelectContainer>
             <Label>그룹 공개 선택</Label>
             <RowContainer>
               <SmallText>공개</SmallText>
+              <ToggleSwitch>
+                <input
+                  type="checkbox"
+                  checked={isPublic}
+                  onChange={(e) => setIsPublic(e.target.checked)}
+                />
+                <Slider />
+              </ToggleSwitch>
             </RowContainer>
           </SelectContainer>
           <InputContainer>
             <Label>비밀번호 생성</Label>
-            <InputBody placeholder="그룹 비밀번호를 생성해 주세요" />
+            <InputBody
+              placeholder="그룹 비밀번호를 생성해 주세요"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </InputContainer>
         </FormBody>
-        <ButtonCustom title={"만들기"} />
+        <ButtonCustom
+          title={"만들기"}
+          type="submit"
+          onClick={handleGroupPost}
+        />
       </FormContainer>
     </OutContainer>
   );
@@ -109,6 +175,11 @@ export const InputBody = styled.input`
   }
 `;
 
+export const HiddenFileInput = styled(InputBody)`
+  width: 290px;
+  height: 45px;
+`;
+
 export const FileContainer = styled.div`
   display: flex;
   width: 400px;
@@ -117,9 +188,7 @@ export const FileContainer = styled.div`
 `;
 
 export const FileInput = styled(InputBody)`
-  display: flex;
-  width: 290px;
-  height: 45px;
+  display: none;
 `;
 
 export const FileButton = styled.button`
@@ -168,6 +237,7 @@ export const RowContainer = styled.div`
   width: 94px;
   height: 24px;
   justify-content: space-between;
+  align-items: center;
 `;
 
 export const SmallText = styled.h1`
@@ -175,4 +245,47 @@ export const SmallText = styled.h1`
   font-weight: 400;
 `;
 
-//const ToggleButton =
+export const ToggleSwitch = styled.label`
+  position: relative;
+  width: 48px;
+  height: 24px;
+  display: inline-block;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  input:checked + div {
+    background-color: #282828;
+  }
+
+  input:checked + div:before {
+    transform: translateX(23px);
+  }
+`;
+
+export const Slider = styled.div`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+`;

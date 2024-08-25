@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useState } from "react";
 import {
   Title,
   InputContainer,
@@ -7,19 +8,47 @@ import {
 } from "../../components/formCustom";
 import ButtonCustom from "../../components/button";
 import PropTypes from "prop-types";
+import { groupAccessGet } from "../../Utils/GroupUtils";
+import { useParams } from "react-router-dom";
 
 const PrivateAccess = ({ title, content, hint }) => {
+  // 비밀번호 상태 관리
+  const [pwd, setPwd] = useState();
+  const { groupId } = useParams();
+
+  // 접근 권한 확인
+  const handleAccess = async () => {
+    try {
+      const response = await groupAccessGet(groupId, pwd);
+      console.log("비밀번호 확인: ", pwd);
+      if (response) {
+        console.log("그룹 접근 권한 확인 성공: ", response);
+      }
+    } catch (error) {
+      console.log("그룹 접근 권한 확인 실패: ", error);
+    }
+  };
+
   return (
     <OutContainer>
       <FormContainer>
         <Title>{title}</Title>
         <Content>{content}</Content>
-        <FormBody>
+        <FormBody
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleAccess();
+          }}
+        >
           <InputContainer>
             <Label>비밀번호 입력</Label>
-            <InputBody placeholder={hint} />
+            <InputBody
+              placeholder={hint}
+              value={pwd}
+              onChange={(e) => setPwd(e.target.value)}
+            />
           </InputContainer>
-          <ButtonCustom title={"제출하기"} />
+          <ButtonCustom title={"제출하기"} type="submit" />
         </FormBody>
       </FormContainer>
     </OutContainer>

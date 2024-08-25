@@ -1,5 +1,4 @@
 //import styled from "styled-components";
-import PrivateGroup from "./privateGroup";
 import PublicDetail from "../../components/publicDetail";
 import MakeButton from "../../components/makeButton";
 import {
@@ -19,7 +18,7 @@ const PrivateGroupDetail = () => {
           <Title>추억 목록</Title>
           <MakeButton title={"추억 올리기"} />
         </TitleContainer>
-        <PrivateGroup />
+        {/* <PrivateGroup /> */}
       </BodyContainer>
     </OutContainer>
   );

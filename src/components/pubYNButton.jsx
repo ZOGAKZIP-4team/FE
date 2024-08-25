@@ -1,18 +1,12 @@
 import styled from "styled-components";
-import { useState } from "react";
 import PropTypes from "prop-types";
 
-const PubYNButton = ({ title }) => {
-  const [back, setBack] = useState("#ffffff");
-  const [text, setText] = useState("#282828");
-  // 버튼 클릭 핸들러
-  const handleButton = () => {
-    setBack((prevBack) => (prevBack === "#ffffff" ? "#282828" : "#ffffff"));
-    setText((prevText) => (prevText === "#282828" ? "#ffffff" : "#282828"));
-  };
+const PubYNButton = ({ title, isActive, onClick }) => {
+  const back = isActive ? "#282828" : "#ffffff";
+  const text = isActive ? "#ffffff" : "#282828";
 
   return (
-    <OutContainer onClick={handleButton} back={back}>
+    <OutContainer onClick={onClick} back={back}>
       <Text text={text}>{title}</Text>
     </OutContainer>
   );
@@ -44,4 +38,6 @@ const Text = styled.h1`
 
 PubYNButton.propTypes = {
   title: PropTypes.string.isRequired,
+  isActive: PropTypes.bool.isRequired, // 버튼 활성 상태
+  onClick: PropTypes.func.isRequired, // 클릭 핸들러
 };
