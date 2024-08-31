@@ -31,7 +31,7 @@ const Modal = ({
             <Label>{label}</Label>
             <InputBody placeholder={hint} value={value} onChange={onChange} />
           </InputContainer>
-          <ButtonCustom title={btn} type="submit" onClick={onClose} />
+          <ButtonCustom title={btn} type="submit" />
         </FormBody>
       </OutContainer>
     </BackContainer>

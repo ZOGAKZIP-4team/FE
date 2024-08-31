@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import { DayContainer, Day, PublicY } from "../../components/publicList";
 import seperate from "../../assets/seperate.svg";
 import smallIcon from "../../assets/smallIcon.svg";
@@ -9,8 +8,88 @@ import publicImg from "../../assets/publicImg.svg";
 import arrowRight from "../../assets/arrowRight.svg";
 import pen from "../../assets/Pen.svg";
 import trashBin from "../../assets/trashBin.svg";
+import { useParams } from "react-router-dom";
+import { boardDel, boardDetailGet, boardLike } from "../../Utils/BoardUtils";
+import { useEffect, useState } from "react";
+import MemoryModModal from "./memoryModModal";
+import Modal from "../../components/modal";
 
-const MemoryDetail = ({ onModModal, onDelModal }) => {
+const MemoryDetail = () => {
+  const { postId } = useParams();
+  // 상세 정보 상태 관리
+  const [memoryDetail, setMemoryDetail] = useState(null);
+
+  // 모달 띄우기
+  const [isOpen, setIsOpen] = useState(false);
+
+  // 삭제 모달 띄우기
+  const [delOpen, setDelOpen] = useState(false);
+
+  const [postPassword, setPostPassword] = useState("");
+
+  const openModModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModModal = () => {
+    setIsOpen(false);
+  };
+
+  const openDelModal = () => {
+    setDelOpen(true);
+  };
+
+  const closeDelModal = () => {
+    setDelOpen(false);
+  };
+
+  // 게시글 상세 정보 조회
+  const handleBoardDetailGet = async () => {
+    try {
+      const response = await boardDetailGet(postId);
+      if (response) {
+        console.log("게시글 상세 정보: ", response);
+        setMemoryDetail(response.data);
+      }
+      return response;
+    } catch (error) {
+      console.log("게시글 상세 정보 실패: ", error);
+    }
+  };
+
+  // 게시글 삭제
+  const handleBoardDel = async () => {
+    try {
+      const response = await boardDel(postId, postPassword);
+      console.log("비밀번호: ", postPassword);
+      if (response) {
+        console.log("게시글 삭제", response);
+      }
+    } catch (error) {
+      console.log("게시글 삭제 실패: ", error);
+    }
+  };
+
+  // 게시글 공감하기
+  const handleBoardLike = async () => {
+    try {
+      const response = await boardLike(postId);
+      if (response) {
+        console.log("게시글 공감: ", response);
+      }
+    } catch (error) {
+      console.log("게시글 공감 실패: ", error);
+    }
+  };
+
+  useEffect(() => {
+    handleBoardDetailGet();
+  }, [postId]);
+
+  if (!memoryDetail) {
+    return <div>Loading...</div>; // 로딩 상태 또는 빈 div를 보여줌
+  }
+
   return (
     <TotalContainer>
       <OutContainer>
@@ -18,37 +97,37 @@ const MemoryDetail = ({ onModModal, onDelModal }) => {
           <ContentContainer>
             <TopContainer>
               <DayContainer>
-                <Day>달봉이아들</Day>
+                <Day>{memoryDetail.nickname}</Day>
                 <img src={seperate} />
-                <PublicY>공개</PublicY>
+                <PublicY>{memoryDetail.isPublic ? "공개" : "비공개"}</PublicY>
               </DayContainer>
               <ModDelContainer>
-                <ButtonMod onClick={onModModal}>추억 수정하기</ButtonMod>
-                <ButtonDel onClick={onDelModal}>추억 삭제하기</ButtonDel>
+                <ButtonMod onClick={openModModal}>추억 수정하기</ButtonMod>
+                <ButtonDel onClick={openDelModal}>추억 삭제하기</ButtonDel>
               </ModDelContainer>
             </TopContainer>
             <TitleContainer>
-              <Title>인천 앞바다에서 무려 60cm 월척을 낚다!</Title>
+              <Title>{memoryDetail.title}</Title>
             </TitleContainer>
-            <TagContainer>#인천 #낚시</TagContainer>
+            <TagContainer>{memoryDetail.tags}</TagContainer>
           </ContentContainer>
           <BottomContainer>
             <FirstContainer>
-              <Location>인천 앞바다</Location>
-              <Date>24.01.19</Date>
+              <Location>{memoryDetail.location}</Location>
+              <Date>{memoryDetail.moment.slice(0, 10)}</Date>
             </FirstContainer>
             <SecondContainer>
               <InfoContainer>
                 <img src={smallIcon} />
-                <Info>120</Info>
+                <Info>{memoryDetail.likeCount}</Info>
               </InfoContainer>
               <InfoContainer>
                 <img src={commentIcon} />
-                <Info>8</Info>
+                <Info>{memoryDetail.commentCount}</Info>
               </InfoContainer>
             </SecondContainer>
           </BottomContainer>
-          <SendButton>
+          <SendButton onClick={handleBoardLike}>
             <img
               src={smallIcon}
               style={{ width: "1.375rem", height: "1.375rem" }}
@@ -60,27 +139,35 @@ const MemoryDetail = ({ onModModal, onDelModal }) => {
       <BarCustom />
       <MainContainer>
         <PhotoContainer src={publicImg} />
-        <Main>
-          인천 앞바다에서 월척을 낚았습니다! 가족들과 기억에 오래도록 남을 멋진
-          하루였어요 가족들과 기억에 오래도록 남을 멋진 하루였어요 가족들과
-          기억에 오래도록 남을 멋진 하루였어요 인천 앞바다에서 월척을
-          낚았습니다! 가족들과 기억에 오래도록 남을 멋진 하루였어요 인천
-          앞바다에서 월척을 낚았습니다!
-        </Main>
+        <Main>{memoryDetail.content}</Main>
       </MainContainer>
       <ButtonCustom title={"댓글 등록하기"} />
       <Comment />
       <PageComponent />
+      {isOpen && (
+        <MemoryModModal
+          data={memoryDetail}
+          onClose={closeModModal}
+          onSave={(updatedData) => setMemoryDetail(updatedData)}
+        />
+      )}
+      {delOpen && (
+        <Modal
+          title={"추억 삭제"}
+          label={"삭제 권한 인증"}
+          hint={"추억 비밀번호를 입력해 주세요"}
+          btn={"삭제하기"}
+          value={postPassword}
+          onChange={(e) => setPostPassword(e.target.value)}
+          onSubmit={handleBoardDel}
+          onClose={closeDelModal}
+        />
+      )}
     </TotalContainer>
   );
 };
 
 export default MemoryDetail;
-
-MemoryDetail.propTypes = {
-  onModModal: PropTypes.func.isRequired,
-  onDelModal: PropTypes.func.isRequired,
-};
 
 const TotalContainer = styled.div`
   display: flex;

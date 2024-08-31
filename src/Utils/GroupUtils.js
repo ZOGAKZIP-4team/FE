@@ -50,12 +50,12 @@ export const groupGet = async (page, pageSize, sortBy, keyword, isPublic) => {
 
 // 그룹 수정
 export const groupPut = async (
+  groupId,
   name,
   password,
   imageUrl,
   isPublic,
-  introduction,
-  groupId
+  introduction
 ) => {
   try {
     const response = await axios.put(
@@ -111,12 +111,10 @@ export const groupDetailGet = async (groupId) => {
 // 그룹 조회 권한 확인
 export const groupAccessGet = async (groupId, password) => {
   try {
-    const response = await axios.get(
+    const response = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/groups/${groupId}/verify-password`,
       {
-        data: {
-          password: password,
-        },
+        password: password,
       }
     );
     console.log("그룹 조회 권한 확인: ", response);

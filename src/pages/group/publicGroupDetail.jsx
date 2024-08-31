@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import PublicGroup from "./publicGroup";
 import PublicDetail from "../../components/publicDetail";
 import MakeButton from "../../components/makeButton";
 import ModModal from "./modModal";
 import Modal from "../../components/modal";
+import MemoryModal from "../memory/memoryModal";
 import { groupDetailGet, groupDel } from "../../Utils/GroupUtils";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+//import MemoryPublicList from "../../components/memoryPublicList";
+//import PublicGroup from "./publicGroup";
+import MemoryPublicGroup from "./memoryPublicGroup";
 
 const PublicGroupDetail = () => {
   // 모달 상태 관리 - 수정
@@ -14,6 +17,8 @@ const PublicGroupDetail = () => {
   // 모달 상태 관리 - 삭제
   const [delOpen, setDelOpen] = useState(false);
   const [delpwd, setDelPwd] = useState("");
+  // 모달 상태 관리 - 추억 올리기
+  const [memoryModal, setMemoryModal] = useState(false);
   // 그룹 상세 정보 상태 관리
   const { groupId } = useParams();
   const [groupDetail, setGroupDetail] = useState(null);
@@ -81,6 +86,15 @@ const PublicGroupDetail = () => {
     return <div>Loading...</div>; // 로딩 중 메시지
   }
 
+  const handleMemoryModal = () => {
+    setMemoryModal(true);
+    console.log("추억 올리기 클릭");
+  };
+
+  const handleMemoryCloseModal = () => {
+    setMemoryModal(false);
+  };
+
   return (
     <OutContainer>
       <BodyContainer>
@@ -93,11 +107,17 @@ const PublicGroupDetail = () => {
         <Bar />
         <TitleContainer>
           <Title>추억 목록</Title>
-          <MakeButton title={"추억 올리기"} />
+          <MakeButton title={"추억 올리기"} onClick={handleMemoryModal} />
         </TitleContainer>
-        <PublicGroup />
+        <MemoryPublicGroup />
       </BodyContainer>
-      {modOpen && <ModModal onClose={closeModal} />}
+      {modOpen && (
+        <ModModal
+          data={groupDetail}
+          onClose={closeModal}
+          onSave={(updatedData) => setGroupDetail(updatedData)}
+        />
+      )}
       {delOpen && (
         <Modal
           title={"그룹 삭제"}
@@ -110,6 +130,7 @@ const PublicGroupDetail = () => {
           onClose={closeDelModal}
         />
       )}
+      {memoryModal && <MemoryModal onClose={handleMemoryCloseModal} />}
     </OutContainer>
   );
 };

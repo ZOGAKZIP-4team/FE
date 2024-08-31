@@ -1,15 +1,6 @@
 import styled from "styled-components";
-import ButtonCustom from "../../components/button";
-import close from "../../assets/close.svg";
-import Modal from "../../components/modal";
-import { boardPost } from "../../Utils/BoardUtils";
 import { useState } from "react";
-import PropTypes from "prop-types";
-import {
-  HiddenFileInput,
-  ToggleSwitch,
-  Slider,
-} from "../../components/formCustom";
+import { boardPut } from "../../Utils/BoardUtils";
 import {
   Title,
   InputContainer,
@@ -24,25 +15,28 @@ import {
   SelectContainer,
   RowContainer,
 } from "../../components/formCustom";
-import { useParams } from "react-router-dom";
+import {
+  HiddenFileInput,
+  ToggleSwitch,
+  Slider,
+} from "../../components/formCustom";
+import ButtonCustom from "../../components/button";
+import PropTypes from "prop-types";
+import close from "../../assets/close.svg";
 
-const MemoryModal = ({ onClose }) => {
-  const { groupId } = useParams();
-  // 권한 확인 모달 띄우기
-  const [isOpen, setIsOpen] = useState(false);
+const MemoryModModal = ({ data, onClose, onSave }) => {
   // 추억 올리기 값 상태 관리
-  const [nickname, setNickname] = useState();
-  const [title, setTitle] = useState();
-  const [content, setContent] = useState();
-  const [postPassword, setPostPassword] = useState();
-  const [groupPassword, setGroupPassword] = useState();
+  const [nickname, setNickname] = useState(data.nickname);
+  const [title, setTitle] = useState(data.title);
+  const [content, setContent] = useState(data.content);
+  const [postPassword, setPostPassword] = useState(data.postPassword);
   const [imageUrl, setImageUrl] = useState(
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwyXeKDN29AmZgZPLS7n0Bepe8QmVappBwZCeA3XWEbWNdiDFB"
   );
-  const [tags, setTags] = useState([]);
-  const [location, setLocation] = useState();
-  const [moment, setMoment] = useState();
-  const [isPublic, setIsPublic] = useState(true);
+  const [tags, setTags] = useState(data.tags || []);
+  const [location, setLocation] = useState(data.location);
+  const [moment, setMoment] = useState(data.moment);
+  const [isPublic, setIsPublic] = useState(data.isPublic);
   const [currentTag, setCurrentTag] = useState("");
 
   // 파일 첨부
@@ -71,34 +65,16 @@ const MemoryModal = ({ onClose }) => {
     );
   };
 
-  const openModal = (e) => {
+  // 게시물 수정
+  const handleBoardPut = async (e) => {
     e.preventDefault();
-    setIsOpen(true);
-  };
-
-  // 게시물 등록
-  const handleBoardPost = async () => {
-    console.log(
-      "게시물 내용: ",
-      nickname,
-      title,
-      content,
-      postPassword,
-      groupPassword,
-      imageUrl,
-      tags,
-      location,
-      moment,
-      isPublic
-    );
     try {
-      const response = await boardPost(
-        groupId,
+      const response = await boardPut(
+        data._id,
         nickname,
         title,
         content,
         postPassword,
-        groupPassword,
         imageUrl,
         tags,
         location,
@@ -106,19 +82,32 @@ const MemoryModal = ({ onClose }) => {
         isPublic
       );
       if (response) {
-        console.log("게시물 등록: ", response);
+        console.log("게시물 수정: ", response);
+        // 수정된 데이터를 부모 컴포넌트에 전달하여 반영
+        onSave({
+          nickname,
+          title,
+          content,
+          postPassword,
+          imageUrl,
+          tags,
+          location,
+          moment,
+          isPublic,
+        });
+        onClose(); // 수정 후 모달 닫기
       }
     } catch (error) {
-      console.log("게시물 등록 실패: ", error);
+      console.log("게시물 수정 실패: ", error);
     }
   };
 
   return (
     <BackContainer>
       <OutContainer>
-        <Title>추억 올리기</Title>
+        <Title>추억 수정</Title>
         <CloseIcon src={close} onClick={onClose} />
-        <FormBody>
+        <FormBody onSubmit={handleBoardPut}>
           <FormRow>
             <Form>
               <InputContainer>
@@ -192,7 +181,7 @@ const MemoryModal = ({ onClose }) => {
                 <Label>추억의 순간</Label>
                 <InputBody
                   placeholder="YYYY-MM-DD"
-                  value={moment}
+                  value={moment.slice(0, 10)}
                   onChange={(e) => setMoment(e.target.value)}
                 />
               </InputContainer>
@@ -220,35 +209,37 @@ const MemoryModal = ({ onClose }) => {
               </InputContainer>
             </Form>
           </FormRow>
-          <ButtonCustom title={"올리기"} onClick={openModal} />
+          <ButtonCustom title={"수정하기"} type="submit" />
         </FormBody>
       </OutContainer>
-      {isOpen && (
-        <Modal
-          title={"추억 올리기"}
-          label={"올리기 권한 인증"}
-          hint={"그룹 비밀번호를 입력해 주세요"}
-          btn={"제출하기"}
-          onSubmit={handleBoardPost}
-          value={groupPassword}
-          onChange={(e) => setGroupPassword(e.target.value)}
-        />
-      )}
     </BackContainer>
   );
 };
 
-export default MemoryModal;
+export default MemoryModModal;
 
-MemoryModal.propTypes = {
+MemoryModModal.propTypes = {
   onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    nickname: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    isPublic: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired,
+    tags: PropTypes.object.isRequired,
+    location: PropTypes.string.isRequired,
+    moment: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    postPassword: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 const BackContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
   left: 0;

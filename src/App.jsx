@@ -45,7 +45,7 @@ function App() {
         ></Route>
         <Route path="/group/detail/none" element={<DetailNoneData />}></Route>
         <Route
-          path="/memory/access"
+          path="/memory/access/:postId"
           element={
             <PrivateAccess
               title={"비공개 추억"}
@@ -54,7 +54,7 @@ function App() {
             />
           }
         />
-        <Route path="/memory/detail" element={<MemoryDetail />} />
+        <Route path="/memory/:postId" element={<MemoryDetail />} />
       </Routes>
     </BrowserRouter>
   );

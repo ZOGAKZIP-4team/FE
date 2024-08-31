@@ -1,17 +1,19 @@
 import styled from "styled-components";
 import ButtonCustom from "./button";
 import { useState } from "react";
-import {
-  groupPost
-} from "../Utils/GroupUtils";
+import { groupPost } from "../Utils/GroupUtils";
+import { useNavigate } from "react-router-dom";
 
 const FormCustom = () => {
   // 상태 관리
   const [name, setName] = useState();
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwyXeKDN29AmZgZPLS7n0Bepe8QmVappBwZCeA3XWEbWNdiDFB"
+  );
   const [intro, setIntro] = useState();
   const [isPublic, setIsPublic] = useState(true);
   const [password, setPassword] = useState();
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -21,12 +23,17 @@ const FormCustom = () => {
     document.getElementById("fileInput").click();
   };
 
+  const moveToMainPage = () => {
+    navigate("/");
+  };
+
   // 그룹 등록
   const handleGroupPost = async () => {
     try {
-      const response = await groupPost(name, file, intro, isPublic, password);
+      const response = await groupPost(name, password, file, isPublic, intro);
       if (response) {
         console.log("그룹 등록 성공: ", response);
+        moveToMainPage();
       }
       console.log("data: ", name, file, intro, isPublic, password);
     } catch (error) {

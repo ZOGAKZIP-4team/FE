@@ -4,7 +4,7 @@ import dropdownIcon from "../assets/dropdownIcon.svg";
 import PropTypes from "prop-types";
 
 // DropDown 컴포넌트
-const DropDown = () => {
+const DropDown = ({ onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("최신순");
 
@@ -17,6 +17,7 @@ const DropDown = () => {
   const handleItemClick = (item) => {
     setSelectedItem(item);
     setIsOpen(false); // 선택 후 드롭다운 닫기
+    onSelect(item);
   };
 
   return (
@@ -120,3 +121,7 @@ DropDownItem.propTypes = {
   onClick: PropTypes.func.isRequired, // onClick은 함수이어야 하며, 필수입니다.
   selected: PropTypes.bool.isRequired, // selected는 불리언이어야 하며, 필수입니다.
 };
+
+DropDown.propTypes = {
+  onSelect: PropTypes.func.isRequired,
+}

@@ -10,11 +10,15 @@ import ButtonCustom from "../../components/button";
 import PropTypes from "prop-types";
 import { groupAccessGet } from "../../Utils/GroupUtils";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { boardAccess } from "../../Utils/BoardUtils";
 
 const PrivateAccess = ({ title, content, hint }) => {
+  const navigate = useNavigate();
   // 비밀번호 상태 관리
   const [pwd, setPwd] = useState();
   const { groupId } = useParams();
+  const { postId } = useParams();
 
   // 접근 권한 확인
   const handleAccess = async () => {
@@ -23,9 +27,33 @@ const PrivateAccess = ({ title, content, hint }) => {
       console.log("비밀번호 확인: ", pwd);
       if (response) {
         console.log("그룹 접근 권한 확인 성공: ", response);
+        navigate(`/group/private/${groupId}`);
       }
     } catch (error) {
       console.log("그룹 접근 권한 확인 실패: ", error);
+    }
+  };
+
+  // 접근 권한 확인
+  const handleBoardAccess = async () => {
+    try {
+      const response = await boardAccess(postId, pwd);
+      if (response) {
+        console.log("비공개 게시글 접근 권한 확인: ", response);
+        navigate(`/memory/${postId}`);
+      }
+    } catch (error) {
+      console.log("비공개 게시글 접근 권한 실패: ", error);
+    }
+  };
+
+  // onSubmit 핸들러 결정
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (title === "비공개 그룹") {
+      handleAccess();
+    } else if (title === "비공개 추억") {
+      handleBoardAccess();
     }
   };
 
@@ -34,12 +62,7 @@ const PrivateAccess = ({ title, content, hint }) => {
       <FormContainer>
         <Title>{title}</Title>
         <Content>{content}</Content>
-        <FormBody
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleAccess();
-          }}
-        >
+        <FormBody onSubmit={handleSubmit}>
           <InputContainer>
             <Label>비밀번호 입력</Label>
             <InputBody

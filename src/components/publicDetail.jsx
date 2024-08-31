@@ -20,6 +20,10 @@ const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
     }
   };
 
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <OutContainer>
       <PhotoContaienr src={data.imageUrl} />
