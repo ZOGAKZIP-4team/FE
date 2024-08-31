@@ -4,72 +4,72 @@ import smallIcon from "../assets/smallIcon.svg";
 import seperate from "../assets/seperate.svg";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import commentIcon from "../assets/commentIcon.svg";
 
-const PublicList = ({ data }) => {
+const MemoryPublicList = ({ data }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     console.log("data 객체: ", data);
-    navigate(`/group/public/${data._id}`, { state: { dayCount } });
+    navigate(`/memory/${data._id}`);
   };
-  // badges가 비어있으면 0
-  const badgeCount = Array.isArray(data.badges) ? data.badges.length : 0;
 
   // createdAt을 Date 객체로 변환하고 현재 날짜와의 차이를 계산
-  const createdAt = new Date(data.createdAt);
-  const currentDate = new Date();
-  const timeDiff = Math.abs(currentDate - createdAt);
-  const dayCount = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
+  //   const createdAt = new Date(data.createdAt);
+  //   const currentDate = new Date();
+  //   const timeDiff = Math.abs(currentDate - createdAt);
+  //   const dayCount = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
   return (
     <OuterContainer onClick={handleClick}>
       <PhotoContainer src={data.imageUrl} alt="이미지 준비 중" />
       <ContentOutContainer>
         <DayContainer>
-          <Day>D+{dayCount}</Day>
+          <Day>{data.nickname}</Day>
           <img src={seperate} />
           <PublicY>{data.isPublic ? "공개" : "비공개"}</PublicY>
         </DayContainer>
         <ContentInContainer>
-          <Title>{data.name}</Title>
-          <Content>{data.introduction}</Content>
+          <Title>{data.title}</Title>
+          <Content>{data.tags}</Content>
         </ContentInContainer>
         <LookContainer>
           <GetContainer>
-            <SmallTitle>획득 배지</SmallTitle>
-            <SmallContent>{badgeCount}</SmallContent>
+            <SmallContent>{data.location}</SmallContent>
           </GetContainer>
           <GetContainer>
-            <SmallTitle>추억</SmallTitle>
-            <SmallContent>{data.postCount}</SmallContent>
+            <SmallContent>{data.moment.slice(0, 10)}</SmallContent>
           </GetContainer>
-          <GetContainer>
-            <SmallTitle>그룹 공감</SmallTitle>
-            <IconContainer>
-              <Icon src={smallIcon} />
-              <SmallContent>{data.likeCount}</SmallContent>
-            </IconContainer>
-          </GetContainer>
+          <IconContainer>
+            <Icon src={smallIcon} />
+            <SmallContent>{data.likeCount}</SmallContent>
+          </IconContainer>
+          <IconContainer>
+            <Icon src={commentIcon} />
+            <SmallContent>{data.commentCount}</SmallContent>
+          </IconContainer>
         </LookContainer>
       </ContentOutContainer>
     </OuterContainer>
   );
 };
 
-PublicList.propTypes = {
+MemoryPublicList.propTypes = {
   data: PropTypes.shape({
+    nickname: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
     isPublic: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
-    introduction: PropTypes.string.isRequired,
-    badges: PropTypes.arrayOf(PropTypes.string).isRequired,
+    title: PropTypes.string.isRequired,
+    tags: PropTypes.array.isRequired,
+    location: PropTypes.string.isRequired,
+    moment: PropTypes.string.isRequired,
+    commentCount: PropTypes.number.isRequired,
     likeCount: PropTypes.number.isRequired,
-    postCount: PropTypes.number.isRequired,
     createdAt: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default PublicList;
+export default MemoryPublicList;
 
 export const OuterContainer = styled.div`
   display: flex;

@@ -41,7 +41,7 @@ export const groupGet = async (page, pageSize, sortBy, keyword, isPublic) => {
         },
       }
     );
-    console.log("그룹 등록 성공: ", response);
+    console.log("그룹 목록 조회 성공: ", response);
     return response.data;
   } catch (error) {
     console.log("그룹 목록 조회 실패: ", error);
@@ -50,12 +50,12 @@ export const groupGet = async (page, pageSize, sortBy, keyword, isPublic) => {
 
 // 그룹 수정
 export const groupPut = async (
+  groupId,
   name,
   password,
   imageUrl,
   isPublic,
-  introduction,
-  groupId
+  introduction
 ) => {
   try {
     const response = await axios.put(
@@ -76,12 +76,17 @@ export const groupPut = async (
 };
 
 // 그룹 삭제
-export const groupDel = async (password, groupId) => {
+export const groupDel = async (groupId, password) => {
   try {
     const response = await axios.delete(
       `${import.meta.env.VITE_BASE_URL}/groups/${groupId}`,
       {
-        password: password,
+        data: {
+          password: password,
+        },
+        headers: {
+          "Content-Type": "application/json", // 명시적으로 Content-Type 설정
+        },
       }
     );
     console.log("그룹 삭제 성공: ", response);
@@ -104,7 +109,7 @@ export const groupDetailGet = async (groupId) => {
 };
 
 // 그룹 조회 권한 확인
-export const groupDetailPost = async (groupId, password) => {
+export const groupAccessGet = async (groupId, password) => {
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/groups/${groupId}/verify-password`,

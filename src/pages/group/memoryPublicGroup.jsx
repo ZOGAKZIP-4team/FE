@@ -1,29 +1,34 @@
 import styled from "styled-components";
-import PublicList from "../../components/publicList";
 import PubYNButton from "../../components/pubYNButton";
 import Search from "../../components/search";
 import AddViewButton from "../../components/addViewButton";
 import AlignDrop from "../../components/alignDropdown";
-import { useState, useEffect } from "react";
-import { groupGet } from "../../Utils/GroupUtils";
-import noneGroup from "../../assets/noneGroup.svg";
+import { useState, useEffect, useCallback } from "react";
+import { boardGet } from "../../Utils/BoardUtils";
+import noneMemory from "../../assets/noneMemory.svg";
 import ButtonCustom from "../../components/button";
-import PrivateList from "../../components/privateList";
-import { useCallback } from "react";
-import debounce from "lodash/debounce";
+import MemoryPrivateList from "../../components/memoryPrivateList";
+import MemoryPublicList from "../../components/memoryPublicList";
+import { useParams } from "react-router-dom";
+import { debounce } from "lodash";
 
-const PublicGroup = () => {
-  const [list, setList] = useState([]);
-  const [keyword, setKeyword] = useState("");
-  // 공개 여부에 따라 상태 관리
-  const [isPublicFilter, setIsPublicFilter] = useState(true); // default는 공개
+const MemoryPublicGroup = () => {
+  const { groupId } = useParams();
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("latest");
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [keyword, setKeyword] = useState("");
 
-  // 그룹 목록 조회
-  const handleGroupGet = async (searchKeyword) => {
+  // 공개 여부에 따라 상태 관리
+  const [isPublicFilter, setIsPublicFilter] = useState(true); // default는 공개
+
+  // 게시물 목록 조회
+  const handleBoardGet = async (searchKeyword) => {
     try {
-      const response = await groupGet(
+      const response = await boardGet(
+        groupId,
         page,
         10,
         sortBy,
@@ -31,19 +36,23 @@ const PublicGroup = () => {
         isPublicFilter
       );
       if (response && response.data) {
-        console.log("그룹 목록 조회 성공: ", response);
+        console.log("게시물 목록 조회 성공: ", response.data);
         setList(response.data);
+      } else {
+        setHasMore(false);
       }
     } catch (error) {
-      console.log("그룹 목록 조회 실패: ", error);
+      console.log("게시물 목록 조회 실패: ", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // 검색 요청을 디바운스 처리
+  // 검색 디바운스
   const debouncedSearch = useCallback(
     debounce((searchTerm) => {
-      handleGroupGet(searchTerm);
-    }, 500), // 500ms 지연
+      handleBoardGet(searchTerm);
+    }, 500),
     [isPublicFilter, sortBy]
   );
 
@@ -72,7 +81,7 @@ const PublicGroup = () => {
           </ButtonContainer>
           <Search
             onSearch={(value) => setKeyword(value)}
-            hint={"그룹명을 입력해 주세요"}
+            hint={"태그 혹은 제목을 입력해 주세요"}
           />
         </BtnSearchContainer>
         <AlignDrop onSelect={setSortBy} />
@@ -80,25 +89,25 @@ const PublicGroup = () => {
       <BodyContainer>
         {filteredList.length === 0 ? (
           <InnerContainer>
-            <Notice src={noneGroup} />
-            <ButtonCustom title={"그룹 만들기"} />
+            <Notice src={noneMemory} />
+            <ButtonCustom title={"추억 올리기"} />
           </InnerContainer>
         ) : (
           filteredList.map((item, index) =>
             isPublicFilter ? (
-              <PublicList key={index} data={item} />
+              <MemoryPublicList key={index} data={item} />
             ) : (
-              <PrivateList key={index} data={item} />
+              <MemoryPrivateList key={index} data={item} />
             )
           )
         )}
       </BodyContainer>
-      <AddViewButton />
+      <AddViewButton onClick={() => setPage((prevPage) => prevPage + 1)} />
     </OutContaienr>
   );
 };
 
-export default PublicGroup;
+export default MemoryPublicGroup;
 
 export const OutContaienr = styled.div`
   display: flex;

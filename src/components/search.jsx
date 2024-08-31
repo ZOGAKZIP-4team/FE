@@ -1,20 +1,38 @@
 import styled from "styled-components";
 import search from "../assets/search.svg";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
-const Search = () => {
+const Search = ({ onSearch, hint }) => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    onSearch(e.target.value); // 부모 컴포넌트로 검색어 전달
+  };
+
   return (
     <SearchContainer>
       <SearchIcon src={search} />
-      <SearchInput placeholder="그룹명을 검색해 주세요" />
+      <SearchInput
+        placeholder={hint}
+        value={inputValue}
+        onChange={handleInputChange}
+      />
     </SearchContainer>
   );
 };
 
 export default Search;
 
+Search.propTypes = {
+  onSearch: PropTypes.func.isRequired,
+  hint: PropTypes.string.isRequired,
+};
+
 const SearchContainer = styled.div`
   display: flex;
-  width: 1186px;
+  width: 100%;
   height: 45px;
   border: none;
   border-radius: 6px;

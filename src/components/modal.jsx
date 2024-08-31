@@ -6,18 +6,32 @@ import PropTypes from "prop-types";
 import { CloseIcon } from "../pages/memory/memoryModal";
 import close from "../assets/close.svg";
 
-const Modal = ({ title, label, hint, btn }) => {
+const Modal = ({
+  title,
+  label,
+  hint,
+  btn,
+  value,
+  onChange,
+  onSubmit,
+  onClose,
+}) => {
   return (
     <BackContainer>
       <OutContainer>
         <Title>{title}</Title>
-        <CloseIcon src={close} />
-        <FormBody>
+        <CloseIcon src={close} onClick={onClose} />
+        <FormBody
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+        >
           <InputContainer>
             <Label>{label}</Label>
-            <InputBody placeholder={hint} />
+            <InputBody placeholder={hint} value={value} onChange={onChange} />
           </InputContainer>
-          <ButtonCustom title={btn} />
+          <ButtonCustom title={btn} type="submit" />
         </FormBody>
       </OutContainer>
     </BackContainer>
@@ -53,4 +67,8 @@ Modal.propTypes = {
   label: PropTypes.string.isRequired,
   hint: PropTypes.string.isRequired,
   btn: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

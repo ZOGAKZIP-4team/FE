@@ -16,42 +16,129 @@ import {
   Title,
 } from "../../components/formCustom";
 import ButtonCustom from "../../components/button";
+import {
+  HiddenFileInput,
+  ToggleSwitch,
+  Slider,
+} from "../../components/formCustom";
+import PropTypes from "prop-types";
+import { groupPut } from "../../Utils/GroupUtils";
+import { CloseIcon } from "../memory/memoryModModal";
+import close from "../../assets/close.svg";
+import { useState } from "react";
 
-const ModModal = () => {
+const ModModal = ({ data, onClose, onSave }) => {
+  // 그룹 정보 수정 상태 관리
+  // {
+  //   "name": "string",
+  //   "password": "string",
+  //   "imageUrl": "string",
+  //   "isPublic": true,
+  //   "introduction": "string"
+  // }
+  const [name, setName] = useState(data.name);
+  const [introduction, setIntroduction] = useState(data.introduction);
+  const [password, setPassword] = useState(data.password);
+  const [imageUrl, setImageUrl] = useState(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwyXeKDN29AmZgZPLS7n0Bepe8QmVappBwZCeA3XWEbWNdiDFB"
+  );
+  const [isPublic, setIsPublic] = useState(data.isPublic);
+
+  // 파일 첨부
+  const handleFileChange = (e) => {
+    setImageUrl(e.target.files[0]);
+  };
+
+  const handleFileButtonClick = () => {
+    document.getElementById("fileInput").click();
+  };
+
+  // 그룹 수정
+  const handleGroupPut = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await groupPut(
+        data._id,
+        name,
+        password,
+        imageUrl,
+        isPublic,
+        introduction
+      );
+      if (response) {
+        console.log("그룹 수정: ", response);
+        onSave({ name, password, imageUrl, isPublic, introduction });
+      }
+    } catch (error) {
+      console.log("그룹 수정 실패: ", error);
+    }
+  };
+
   return (
     <BackContainer>
       <OutContainer>
         <Title>그룹 정보 수정</Title>
-        <FormContainer>
+        <CloseIcon src={close} onClick={onClose} />
+        <FormContainer onSubmit={handleGroupPut}>
           <FormBody>
             <InputContainer>
               <Label>그룹명</Label>
-              <InputBody placeholder="그룹명을 입력해 주세요" />
+              <InputBody
+                placeholder="그룹명을 입력해 주세요"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </InputContainer>
             <InputContainer>
               <Label>대표 이미지</Label>
               <FileContainer>
-                <FileInput placeholder="파일을 선택해 주세요" />
-                <FileButton>
+                <FileInput
+                  id="fileInput"
+                  type="file"
+                  onChange={handleFileChange}
+                />
+                <HiddenFileInput
+                  type="text"
+                  placeholder="파일을 선택해 주세요"
+                  value={imageUrl ? imageUrl.name : ""}
+                  readOnly
+                />
+                <FileButton onClick={handleFileButtonClick} type="button">
                   <SmallText>파일 선택</SmallText>
                 </FileButton>
               </FileContainer>
             </InputContainer>
             <TextareaContainer>
               <Label>그룹 소개</Label>
-              <TextareaBody placeholder="그룹을 소개해 주세요" />
+              <TextareaBody
+                placeholder="그룹을 소개해 주세요"
+                value={introduction}
+                onChange={(e) => setIntroduction(e.target.value)}
+              />
             </TextareaContainer>
             <SelectContainer>
               <Label>그룹 공개 선택</Label>
               <RowContainer>
                 <SmallText>공개</SmallText>
+                <ToggleSwitch>
+                  <input
+                    type="checkbox"
+                    checked={isPublic}
+                    onChange={(e) => setIsPublic(e.target.checked)}
+                  />
+                  <Slider />
+                </ToggleSwitch>
               </RowContainer>
             </SelectContainer>
             <InputContainer>
               <Label>수정 권한 인증</Label>
-              <InputBody placeholder="그룹 비밀번호를 입력해 주세요" />
+              <InputBody
+                placeholder="그룹 비밀번호를 입력해 주세요"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </InputContainer>
-            <MarginB title={"수정하기"} />
+            <MarginB title={"수정하기"} type="submit" />
           </FormBody>
         </FormContainer>
       </OutContainer>
@@ -60,6 +147,19 @@ const ModModal = () => {
 };
 
 export default ModModal;
+
+ModModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    introduction: PropTypes.string.isRequired,
+    isPublic: PropTypes.bool.isRequired,
+    _id: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export const BackContainer = styled.div`
   display: flex;
