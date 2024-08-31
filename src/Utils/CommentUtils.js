@@ -34,7 +34,7 @@ export const commentGet = async (postId, page, pageSize) => {
       }
     );
     if (response) {
-      console.log("댓글 등록: ", response);
+      console.log("댓글 목록 조회: ", response);
     }
     return response;
   } catch (error) {
@@ -68,7 +68,7 @@ export const commentDel = async (commentId, password) => {
     const response = await axios.delete(
       `${import.meta.env.VITE_BASE_URL}/comments/${commentId}`,
       {
-        password: password,
+        data: { password: password },
       }
     );
     if (response) {

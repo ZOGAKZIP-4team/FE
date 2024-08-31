@@ -4,7 +4,6 @@ import seperate from "../../assets/seperate.svg";
 import smallIcon from "../../assets/smallIcon.svg";
 import commentIcon from "../../assets/CommentIcon.svg";
 import ButtonCustom from "../../components/button";
-import publicImg from "../../assets/publicImg.svg";
 import arrowRight from "../../assets/arrowRight.svg";
 import pen from "../../assets/Pen.svg";
 import trashBin from "../../assets/trashBin.svg";
@@ -13,17 +12,41 @@ import { boardDel, boardDetailGet, boardLike } from "../../Utils/BoardUtils";
 import { useEffect, useState } from "react";
 import MemoryModModal from "./memoryModModal";
 import Modal from "../../components/modal";
+import CommentModal from "../../components/commentModal";
+import { commentDel, commentGet } from "../../Utils/CommentUtils";
+import PropTypes from "prop-types";
+import CommentModModal from "../../components/commentModModal";
 
 const MemoryDetail = () => {
   const { postId } = useParams();
   // 상세 정보 상태 관리
   const [memoryDetail, setMemoryDetail] = useState(null);
+  // 댓글 삭제 시 비밀번호 사애
+  const [commentPassword, setCommentPassword] = useState("");
 
   // 모달 띄우기
   const [isOpen, setIsOpen] = useState(false);
 
   // 삭제 모달 띄우기
   const [delOpen, setDelOpen] = useState(false);
+
+  // 댓글 모달 띄우기 (등록)
+  const [commentModal, setCommentModal] = useState(false);
+
+  // 댓글 모달 띄우기 (수정)
+  const [commentMod, setCommentMod] = useState(false);
+
+  // 댓글 수정 모달에 전달한 데이터
+  const [commentData, setCommentData] = useState("");
+
+  // 댓글 삭제 모달
+  const [commentDelModal, setCommentDelModal] = useState(false);
+
+  // 댓글 목록 불러오기 상태 관리
+  const [page, setPage] = useState(1);
+  const [commentList, setCommentList] = useState([]);
+  const [totalItemCount, setTotalItemCount] = useState("");
+  const [commentId, setCommentId] = useState("");
 
   const [postPassword, setPostPassword] = useState("");
 
@@ -41,6 +64,36 @@ const MemoryDetail = () => {
 
   const closeDelModal = () => {
     setDelOpen(false);
+  };
+
+  // 댓글 등록 모달
+  const openCommentModal = () => {
+    setCommentModal(true);
+  };
+
+  const closeCommentModal = () => {
+    handleCommentGet();
+    setCommentModal(false);
+  };
+
+  // 댓글 수정 모달
+  const openCommentMod = (comment) => {
+    setCommentData(comment);
+    setCommentMod(true);
+  };
+
+  const closeCommentMod = () => {
+    setCommentMod(false);
+  };
+
+  // 댓글 삭제 모달
+  const openCommentDel = (commentId) => {
+    setCommentId(commentId);
+    setCommentDelModal(true);
+  };
+
+  const closeCommentDel = () => {
+    setCommentDelModal(false);
   };
 
   // 게시글 상세 정보 조회
@@ -82,9 +135,43 @@ const MemoryDetail = () => {
     }
   };
 
+  // 댓글 목록 조회
+  const handleCommentGet = async () => {
+    try {
+      const response = await commentGet(postId, page, 10);
+      if (response) {
+        console.log("댓글 목록 조회: ", response);
+        console.log("댓글 수: ", response.data.totalItemCount);
+        setCommentList(response.data);
+        setTotalItemCount(response.data.totalItemCount);
+      }
+    } catch (error) {
+      console.log("댓글 목록 조회 실패: ", error);
+    }
+  };
+
   useEffect(() => {
     handleBoardDetailGet();
   }, [postId]);
+
+  useEffect(() => {
+    handleCommentGet();
+  }, []);
+
+  // 댓글 삭제
+  const handleCommentDel = async () => {
+    try {
+      const response = await commentDel(commentId, commentPassword);
+      console.log("비밀번호: ", commentPassword);
+      if (response) {
+        console.log("댓글 삭제: ", response);
+        handleCommentGet();
+        closeCommentDel();
+      }
+    } catch (error) {
+      console.log("댓글 삭제 실패: ", error);
+    }
+  };
 
   if (!memoryDetail) {
     return <div>Loading...</div>; // 로딩 상태 또는 빈 div를 보여줌
@@ -138,11 +225,16 @@ const MemoryDetail = () => {
       </OutContainer>
       <BarCustom />
       <MainContainer>
-        <PhotoContainer src={publicImg} />
+        <PhotoContainer src={memoryDetail.imageUrl} />
         <Main>{memoryDetail.content}</Main>
       </MainContainer>
-      <ButtonCustom title={"댓글 등록하기"} />
-      <Comment />
+      <ButtonCustom title={"댓글 등록하기"} onClick={openCommentModal} />
+      <Comment
+        data={commentList}
+        totalItemCount={totalItemCount}
+        onClick={openCommentMod}
+        onDel={openCommentDel}
+      />
       <PageComponent />
       {isOpen && (
         <MemoryModModal
@@ -161,6 +253,28 @@ const MemoryDetail = () => {
           onChange={(e) => setPostPassword(e.target.value)}
           onSubmit={handleBoardDel}
           onClose={closeDelModal}
+        />
+      )}
+      {commentModal && <CommentModal onClose={closeCommentModal} />}
+      {commentMod && (
+        <CommentModModal
+          onClose={closeCommentMod}
+          data={commentData}
+          onSave={() => {
+            handleCommentGet();
+          }}
+        />
+      )}
+      {commentDelModal && (
+        <Modal
+          title={"댓글 삭제"}
+          label={"삭제 권한 인증"}
+          hint={"댓글 비밀번호를 입력해 주세요"}
+          btn={"삭제하기"}
+          value={commentPassword}
+          onChange={(e) => setCommentPassword(e.target.value)}
+          onSubmit={handleCommentDel}
+          onClose={closeCommentDel}
         />
       )}
     </TotalContainer>
@@ -394,36 +508,53 @@ const BarCustom = styled(Bar)`
   opacity: 50%;
 `;
 
-export const Comment = () => {
+export const Comment = ({ data, totalItemCount, onClick, onDel }) => {
+  const comments = Array.isArray(data?.data) ? data.data : [];
   return (
     <CommentOutContainer>
       <GapBar>
         <CommentContainer>
           <CommentTitleContainer>
             <CommentTitle>댓글</CommentTitle>
-            <CommentTitle>8</CommentTitle>
+            <CommentTitle>{totalItemCount}</CommentTitle>
           </CommentTitleContainer>
         </CommentContainer>
         <Bar />
       </GapBar>
-      <CommentList>
-        <CommentTop>
-          <NickName>다람이네 가족</NickName>
-          <Time>24.01.18 21:50</Time>
-        </CommentTop>
-        <Bottom>
-          <CommentContent>
-            우와 60cm이라니..!! 저도 가족들과 가봐야겠어요~
-          </CommentContent>
-          <ButtonContainer>
-            <Button src={pen} />
-            <Button src={trashBin} />
-          </ButtonContainer>
-        </Bottom>
-        <BarCustom />
-      </CommentList>
+      {comments.map((comment, index) => (
+        <CommentList key={index}>
+          <CommentTop>
+            <NickName>{comment.nickname}</NickName>
+            <Time>{comment.createdAt}</Time>
+          </CommentTop>
+          <Bottom>
+            <CommentContent>{comment.content}</CommentContent>
+            <ButtonContainer>
+              <Button src={pen} onClick={() => onClick(comment)} />
+              <Button src={trashBin} onClick={() => onDel(comment.id)} />
+            </ButtonContainer>
+          </Bottom>
+          <BarCustom />
+        </CommentList>
+      ))}
     </CommentOutContainer>
   );
+};
+
+Comment.propTypes = {
+  data: PropTypes.shape({
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        nickname: PropTypes.string.isRequired,
+        content: PropTypes.string.isRequired,
+        createdAt: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
+  totalItemCount: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onDel: PropTypes.func.isRequired,
 };
 
 const CommentOutContainer = styled.div`

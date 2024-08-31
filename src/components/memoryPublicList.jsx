@@ -37,7 +37,7 @@ const MemoryPublicList = ({ data }) => {
             <SmallContent>{data.location}</SmallContent>
           </GetContainer>
           <GetContainer>
-            <SmallContent>{data.moment}</SmallContent>
+            <SmallContent>{data.moment.slice(0, 10)}</SmallContent>
           </GetContainer>
           <IconContainer>
             <Icon src={smallIcon} />

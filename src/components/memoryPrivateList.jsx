@@ -35,20 +35,20 @@ const MemoryPrivateList = ({ data }) => {
     <OuterContainer onClick={handleClick}>
       <ContentOutContainer>
         <DayContainer>
-          <Day>그룹명</Day>
+          <Day>{data.nickname}</Day>
           <img src={seperate} />
           <PublicY>{data.isPublic ? "공개" : "비공개"}</PublicY>
         </DayContainer>
-        <Title>추억 이름</Title>
+        <Title>{data.title}</Title>
         <LookContainer>
           <GetContainer>
             <IconContainer>
               <Icon src={smallIcon} />
-              <SmallContent>120</SmallContent>
+              <SmallContent>{data.likeCount}</SmallContent>
             </IconContainer>
             <IconContainer>
               <Icon src={commentIcon} />
-              <SmallContent>8</SmallContent>
+              <SmallContent>{data.commentCount}</SmallContent>
             </IconContainer>
           </GetContainer>
         </LookContainer>
@@ -61,12 +61,10 @@ MemoryPrivateList.propTypes = {
   data: PropTypes.shape({
     imageUrl: PropTypes.string.isRequired,
     isPublic: PropTypes.bool.isRequired,
-    name: PropTypes.string.isRequired,
-    introduction: PropTypes.string.isRequired,
-    badgeCount: PropTypes.number.isRequired,
+    nickname: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     likeCount: PropTypes.number.isRequired,
-    postCount: PropTypes.number.isRequired,
-    createdAt: PropTypes.instanceOf(Date).isRequired,
+    commentCount: PropTypes.number.isRequired,
     _id: PropTypes.string.isRequired,
   }).isRequired,
 };

@@ -119,27 +119,27 @@ export default FormCustom;
 const OutContainer = styled.div`
   display: flex;
   position: absolute;
-  top: 100px;
+  top: 6.25rem; /* 100px -> 6.25rem */
   left: 0;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  padding-top: 20px;
-  gap: 10px;
+  padding-top: 1.25rem; /* 20px -> 1.25rem */
+  gap: 0.625rem; /* 10px -> 0.625rem */
 `;
 
 export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 420px;
+  width: 26.25rem; /* 420px -> 26.25rem */
   height: 100%;
   align-items: center;
-  gap: 60px;
+  gap: 3.75rem; /* 60px -> 3.75rem */
 `;
 
 export const Title = styled.h1`
-  font-size: 24px;
+  font-size: 1.5rem; /* 24px -> 1.5rem */
   font-weight: 700;
 `;
 
@@ -150,47 +150,47 @@ export const FormBody = styled.form`
   align-items: center;
   width: 100%;
   height: 90%;
-  gap: 30px;
+  gap: 1.875rem; /* 30px -> 1.875rem */
 `;
 
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 400px;
-  height: 85px;
+  width: 25rem; /* 400px -> 25rem */
+  height: 5.3125rem; /* 85px -> 5.3125rem */
 `;
 
 export const Label = styled.h1`
   display: flex;
-  height: 20px;
-  font-size: 16px;
+  height: 1.25rem; /* 20px -> 1.25rem */
+  font-size: 1rem; /* 16px -> 1rem */
   font-weight: 500;
 `;
 
 export const InputBody = styled.input`
   display: flex;
-  width: 400px;
-  height: 45px;
+  width: 25rem; /* 400px -> 25rem */
+  height: 2.8125rem; /* 45px -> 2.8125rem */
   border: 1px solid #dddddd;
   border-radius: 6px;
-  padding: 10px 20px;
+  padding: 0.625rem 1.25rem; /* 10px 20px -> 0.625rem 1.25rem */
   box-sizing: border-box;
 
   &:focus {
-    border-color: #282828; /* 원하는 색상으로 변경 */
-    outline: none; /* 기본 아웃라인 제거 (선택 사항) */
+    border-color: #282828;
+    outline: none;
   }
 `;
 
 export const HiddenFileInput = styled(InputBody)`
-  width: 290px;
-  height: 45px;
+  width: 18.125rem; /* 290px -> 18.125rem */
+  height: 2.8125rem; /* 45px -> 2.8125rem */
 `;
 
 export const FileContainer = styled.div`
   display: flex;
-  width: 400px;
-  height: 45px;
+  width: 25rem; /* 400px -> 25rem */
+  height: 2.8125rem; /* 45px -> 2.8125rem */
   justify-content: space-between;
 `;
 
@@ -200,8 +200,8 @@ export const FileInput = styled(InputBody)`
 
 export const FileButton = styled.button`
   display: flex;
-  width: 100px;
-  height: 45px;
+  width: 6.25rem; /* 100px -> 6.25rem */
+  height: 2.8125rem; /* 45px -> 2.8125rem */
   border: 1px solid #282828;
   border-radius: 6px;
   justify-content: center;
@@ -213,49 +213,49 @@ export const FileButton = styled.button`
 export const TextareaContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 400px;
-  height: 150px;
+  width: 25rem; /* 400px -> 25rem */
+  height: 9.375rem; /* 150px -> 9.375rem */
 `;
 
 export const TextareaBody = styled.textarea`
   display: flex;
-  width: 400px;
-  height: 120px;
+  width: 25rem; /* 400px -> 25rem */
+  height: 7.5rem; /* 120px -> 7.5rem */
   border: 1px solid #dddddd;
   border-radius: 6px;
-  padding: 10px 20px;
+  padding: 0.625rem 1.25rem; /* 10px 20px -> 0.625rem 1.25rem */
   box-sizing: border-box;
 
   &:focus {
-    border-color: #282828; /* 원하는 색상으로 변경 */
-    outline: none; /* 기본 아웃라인 제거 (선택 사항) */
+    border-color: #282828;
+    outline: none;
   }
 `;
 
 export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 400px;
-  height: 64px;
+  width: 25rem; /* 400px -> 25rem */
+  height: 4rem; /* 64px -> 4rem */
 `;
 
 export const RowContainer = styled.div`
   display: flex;
-  width: 94px;
-  height: 24px;
+  width: 5.875rem; /* 94px -> 5.875rem */
+  height: 1.5rem; /* 24px -> 1.5rem */
   justify-content: space-between;
   align-items: center;
 `;
 
 export const SmallText = styled.h1`
-  font-size: 14px;
+  font-size: 0.875rem; /* 14px -> 0.875rem */
   font-weight: 400;
 `;
 
 export const ToggleSwitch = styled.label`
   position: relative;
-  width: 48px;
-  height: 24px;
+  width: 3rem; /* 48px -> 3rem */
+  height: 1.5rem; /* 24px -> 1.5rem */
   display: inline-block;
 
   input {
@@ -287,10 +287,10 @@ export const Slider = styled.div`
   &:before {
     position: absolute;
     content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
+    height: 1.125rem; /* 18px -> 1.125rem */
+    width: 1.125rem; /* 18px -> 1.125rem */
+    left: 0.1875rem; /* 3px -> 0.1875rem */
+    bottom: 0.1875rem; /* 3px -> 0.1875rem */
     background-color: white;
     transition: 0.4s;
     border-radius: 50%;

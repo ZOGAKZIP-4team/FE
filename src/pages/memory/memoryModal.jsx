@@ -107,6 +107,7 @@ const MemoryModal = ({ onClose }) => {
       );
       if (response) {
         console.log("게시물 등록: ", response);
+        setIsOpen(false);
       }
     } catch (error) {
       console.log("게시물 등록 실패: ", error);
@@ -250,8 +251,8 @@ const BackContainer = styled.div`
   justify-content: center;
   background-color: white;
   position: fixed;
-  top: 0;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   z-index: 999;
