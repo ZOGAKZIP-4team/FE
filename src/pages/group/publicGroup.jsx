@@ -9,18 +9,27 @@ import { groupGet } from "../../Utils/GroupUtils";
 import noneGroup from "../../assets/noneGroup.svg";
 import ButtonCustom from "../../components/button";
 import PrivateList from "../../components/privateList";
+import { useCallback } from "react";
+import debounce from "lodash/debounce";
 
 const PublicGroup = () => {
-  // 임시 데이터
-  //const publicLists = Array.from({ length: 16 });
   const [list, setList] = useState([]);
+  const [keyword, setKeyword] = useState("");
   // 공개 여부에 따라 상태 관리
   const [isPublicFilter, setIsPublicFilter] = useState(true); // default는 공개
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState("latest");
 
   // 그룹 목록 조회
-  const handleGroupGet = async () => {
+  const handleGroupGet = async (searchKeyword) => {
     try {
-      const response = await groupGet();
+      const response = await groupGet(
+        page,
+        10,
+        sortBy,
+        searchKeyword,
+        isPublicFilter
+      );
       if (response && response.data) {
         console.log("그룹 목록 조회 성공: ", response);
         setList(response.data);
@@ -30,9 +39,17 @@ const PublicGroup = () => {
     }
   };
 
+  // 검색 요청을 디바운스 처리
+  const debouncedSearch = useCallback(
+    debounce((searchTerm) => {
+      handleGroupGet(searchTerm);
+    }, 500), // 500ms 지연
+    [isPublicFilter, sortBy]
+  );
+
   useEffect(() => {
-    handleGroupGet();
-  }, []);
+    debouncedSearch(keyword);
+  }, [keyword, debouncedSearch]);
 
   // 필터링된 리스트
   const filteredList = list.filter((item) => item.isPublic === isPublicFilter);
@@ -53,9 +70,12 @@ const PublicGroup = () => {
               onClick={() => setIsPublicFilter(false)}
             />
           </ButtonContainer>
-          <Search />
+          <Search
+            onSearch={(value) => setKeyword(value)}
+            hint={"그룹명을 입력해 주세요"}
+          />
         </BtnSearchContainer>
-        <AlignDrop />
+        <AlignDrop onSelect={setSortBy} />
       </TopContainer>
       <BodyContainer>
         {filteredList.length === 0 ? (

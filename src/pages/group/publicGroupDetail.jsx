@@ -7,8 +7,6 @@ import Modal from "../../components/modal";
 import MemoryModal from "../memory/memoryModal";
 import { groupDetailGet, groupDel } from "../../Utils/GroupUtils";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-//import MemoryPublicList from "../../components/memoryPublicList";
-//import PublicGroup from "./publicGroup";
 import MemoryPublicGroup from "./memoryPublicGroup";
 
 const PublicGroupDetail = () => {

@@ -14,7 +14,6 @@ import PrivateAccess from "./pages/group/privateAccess";
 import PublicGroupDetail from "./pages/group/publicGroupDetail";
 import PrivateGroupDetail from "./pages/group/privateGroupDetail";
 import DetailNoneData from "./pages/group/detailNoneData";
-import MemoryModal from "./pages/memory/memoryModal";
 import MemoryDetail from "./pages/memory/memoryDetail";
 
 function App() {
@@ -34,7 +33,6 @@ function App() {
             />
           }
         />
-        <Route path="/test/modal" element={<MemoryModal />} />
         <Route
           path="/group/public/:groupId"
           element={<PublicGroupDetail />}

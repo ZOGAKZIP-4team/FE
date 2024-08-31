@@ -14,10 +14,13 @@ const DropDown = ({ onSelect }) => {
   };
 
   //항목 클릭 이벤트
-  const handleItemClick = (item) => {
+  const handleItemClick = (item, value) => {
     setSelectedItem(item);
     setIsOpen(false); // 선택 후 드롭다운 닫기
-    onSelect(item);
+    if (onSelect) {
+      onSelect(value);
+    }
+    // onSelect(item);
   };
 
   return (
@@ -30,16 +33,19 @@ const DropDown = ({ onSelect }) => {
         <DropDownList>
           <DropDownItem
             item="최신순"
+            value="latest"
             onClick={handleItemClick}
             selected={selectedItem === "최신순"}
           />
           <DropDownItem
             item="댓글순"
+            value="mostPosted"
             onClick={handleItemClick}
             selected={selectedItem === "댓글순"}
           />
           <DropDownItem
             item="공감순"
+            value="mostLiked"
             onClick={handleItemClick}
             selected={selectedItem === "공감순"}
           />
@@ -51,9 +57,12 @@ const DropDown = ({ onSelect }) => {
 
 export default DropDown;
 
-const DropDownItem = ({ item, onClick, selected }) => {
+const DropDownItem = ({ item, value, onClick, selected }) => {
   return (
-    <DropDownItemContainer onClick={() => onClick(item)} selected={selected}>
+    <DropDownItemContainer
+      onClick={() => onClick(item, value)}
+      selected={selected}
+    >
       {item}
     </DropDownItemContainer>
   );
@@ -120,8 +129,9 @@ DropDownItem.propTypes = {
   item: PropTypes.string.isRequired, // item은 문자열이어야 하며, 필수입니다.
   onClick: PropTypes.func.isRequired, // onClick은 함수이어야 하며, 필수입니다.
   selected: PropTypes.bool.isRequired, // selected는 불리언이어야 하며, 필수입니다.
+  value: PropTypes.string.isRequired,
 };
 
 DropDown.propTypes = {
   onSelect: PropTypes.func.isRequired,
-}
+};

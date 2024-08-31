@@ -10,12 +10,10 @@ const PublicList = ({ data }) => {
 
   const handleClick = () => {
     console.log("data 객체: ", data);
-    navigate(`/group/public/${data._id}`, {state: {dayCount}});
+    navigate(`/group/public/${data._id}`, { state: { dayCount } });
   };
-  // badgeCount가 비어있으면 0
-  const badgeCount = Array.isArray(data.badgeCount)
-    ? data.badgeCount.length
-    : 0;
+  // badges가 비어있으면 0
+  const badgeCount = Array.isArray(data.badges) ? data.badges.length : 0;
 
   // createdAt을 Date 객체로 변환하고 현재 날짜와의 차이를 계산
   const createdAt = new Date(data.createdAt);
@@ -63,10 +61,10 @@ PublicList.propTypes = {
     isPublic: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     introduction: PropTypes.string.isRequired,
-    badgeCount: PropTypes.number.isRequired,
+    badges: PropTypes.arrayOf(PropTypes.string).isRequired,
     likeCount: PropTypes.number.isRequired,
     postCount: PropTypes.number.isRequired,
-    createdAt: PropTypes.instanceOf(Date).isRequired,
+    createdAt: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired,
   }).isRequired,
 };

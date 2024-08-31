@@ -66,7 +66,7 @@ PrivateList.propTypes = {
     badgeCount: PropTypes.number.isRequired,
     likeCount: PropTypes.number.isRequired,
     postCount: PropTypes.number.isRequired,
-    createdAt: PropTypes.instanceOf(Date).isRequired,
+    createdAt: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired,
   }).isRequired,
 };

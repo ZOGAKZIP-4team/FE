@@ -3,13 +3,14 @@ import PubYNButton from "../../components/pubYNButton";
 import Search from "../../components/search";
 import AddViewButton from "../../components/addViewButton";
 import AlignDrop from "../../components/alignDropdown";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { boardGet } from "../../Utils/BoardUtils";
 import noneMemory from "../../assets/noneMemory.svg";
 import ButtonCustom from "../../components/button";
 import MemoryPrivateList from "../../components/memoryPrivateList";
 import MemoryPublicList from "../../components/memoryPublicList";
 import { useParams } from "react-router-dom";
+import { debounce } from "lodash";
 
 const MemoryPublicGroup = () => {
   const { groupId } = useParams();
@@ -24,14 +25,14 @@ const MemoryPublicGroup = () => {
   const [isPublicFilter, setIsPublicFilter] = useState(true); // default는 공개
 
   // 게시물 목록 조회
-  const handleBoardGet = async () => {
+  const handleBoardGet = async (searchKeyword) => {
     try {
       const response = await boardGet(
         groupId,
         page,
         10,
         sortBy,
-        keyword,
+        searchKeyword,
         isPublicFilter
       );
       if (response && response.data) {
@@ -47,9 +48,17 @@ const MemoryPublicGroup = () => {
     }
   };
 
+  // 검색 디바운스
+  const debouncedSearch = useCallback(
+    debounce((searchTerm) => {
+      handleBoardGet(searchTerm);
+    }, 500),
+    [isPublicFilter, sortBy]
+  );
+
   useEffect(() => {
-    handleBoardGet();
-  }, [page, sortBy, isPublicFilter]);
+    debouncedSearch(keyword);
+  }, [keyword, debouncedSearch]);
 
   // 필터링된 리스트
   const filteredList = list.filter((item) => item.isPublic === isPublicFilter);
@@ -70,15 +79,12 @@ const MemoryPublicGroup = () => {
               onClick={() => setIsPublicFilter(false)}
             />
           </ButtonContainer>
-          <Search />
+          <Search
+            onSearch={(value) => setKeyword(value)}
+            hint={"태그 혹은 제목을 입력해 주세요"}
+          />
         </BtnSearchContainer>
-        <AlignDrop
-          onSelect={(item) => {
-            setSortBy(item);
-            setPage(1);
-            setList([]);
-          }}
-        />
+        <AlignDrop onSelect={setSortBy} />
       </TopContainer>
       <BodyContainer>
         {filteredList.length === 0 ? (

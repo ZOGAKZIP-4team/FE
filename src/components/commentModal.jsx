@@ -11,7 +11,7 @@ import {
 } from "../components/formCustom";
 import ButtonCustom from "../components/button";
 import PropTypes from "prop-types";
-import { CloseIcon } from "../pages/memory/memoryModModal";
+import { CloseIcon } from "../pages/memory/memoryModal";
 import close from "../assets/close.svg";
 import { useState } from "react";
 import { commentPost } from "../Utils/CommentUtils";
@@ -111,7 +111,7 @@ export const BackContainer = styled.div`
   z-index: 999;
 `;
 
-const OutContainer = styled.div`
+export const OutContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 25%;
@@ -120,10 +120,11 @@ const OutContainer = styled.div`
   border-radius: 6px;
   justify-content: center;
   align-items: center;
-  padding-top: 40px;
+  padding-top: 2%;
   box-sizing: border-box;
+  position: relative;
 `;
 
-const MarginB = styled(ButtonCustom)`
+export const MarginB = styled(ButtonCustom)`
   margin-top: 30px;
 `;

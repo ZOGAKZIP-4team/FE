@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {
   FormBody,
   InputBody,
@@ -9,12 +8,12 @@ import {
   TextareaContainer,
   Title,
 } from "../components/formCustom";
-import ButtonCustom from "../components/button";
 import PropTypes from "prop-types";
 import { CloseIcon } from "../pages/memory/memoryModModal";
 import close from "../assets/close.svg";
 import { useState } from "react";
 import { commentPut } from "../Utils/CommentUtils";
+import { OutContainer, BackContainer, MarginB } from "./commentModal";
 
 const CommentModModal = ({ data, onClose, onSave }) => {
   const [nickname, setNickname] = useState(data.nickname);
@@ -86,33 +85,3 @@ CommentModModal.propTypes = {
     content: PropTypes.string.isRequired,
   }).isRequired,
 };
-
-export const BackContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 999;
-`;
-
-const OutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 25%;
-  height: 80%;
-  background-color: white;
-  border-radius: 6px;
-  justify-content: center;
-  align-items: center;
-  padding-top: 40px;
-  box-sizing: border-box;
-`;
-
-const MarginB = styled(ButtonCustom)`
-  margin-top: 30px;
-`;
