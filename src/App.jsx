@@ -15,6 +15,7 @@ import PublicGroupDetail from "./pages/group/publicGroupDetail";
 import PrivateGroupDetail from "./pages/group/privateGroupDetail";
 import DetailNoneData from "./pages/group/detailNoneData";
 import MemoryDetail from "./pages/memory/memoryDetail";
+import Page404 from "./pages/404/page404";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
           }
         />
         <Route path="/memory/:postId" element={<MemoryDetail />} />
+        <Route path="*" element={<Page404/>}></Route>
       </Routes>
     </BrowserRouter>
   );

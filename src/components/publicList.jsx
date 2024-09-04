@@ -100,7 +100,7 @@ const ContentOutContainer = styled.div`
 
 export const DayContainer = styled.div`
   display: flex;
-  width: 9rem; /* 91px */
+  width: 7rem;
   height: 1.125rem; /* 18px */
   justify-content: space-between;
   align-items: center;

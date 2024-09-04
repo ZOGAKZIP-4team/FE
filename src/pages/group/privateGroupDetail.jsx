@@ -1,5 +1,5 @@
 //import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PublicDetail from "../../components/publicDetail";
 import MakeButton from "../../components/makeButton";
 import ModModal from "./modModal";
@@ -41,6 +41,9 @@ const PrivateGroupDetail = () => {
   const openDelModal = () => {
     setDelOpen(true);
   };
+
+  // MemoryPublicGroup에 대한 레퍼런스 상태 관리
+  const memoryGroupRef = useRef();
 
   // 그룹 삭제하기
   const handleGroupDel = async () => {
@@ -98,6 +101,12 @@ const PrivateGroupDetail = () => {
 
   const handleMemoryCloseModal = () => {
     setMemoryModal(false);
+    memoryGroupRef.current.handleNewMemoryAdded(); // 목록 업데이트
+  };
+
+  // MemoryPublicGroup에서 알림을 받으면 그룹 상세 정보 다시 조회
+  const handleUpdateGroupDetail = () => {
+    handleGroupDetailGet();
   };
   
   return (
@@ -116,7 +125,7 @@ const PrivateGroupDetail = () => {
         </TitleContainer>
         {/* <PrivateGroup /> */}
         {/* <PublicGroup /> */}
-        <MemoryPublicGroup/>
+        <MemoryPublicGroup ref={memoryGroupRef} onUpdateGroupDetail={handleUpdateGroupDetail}/>
       </BodyContainer>
       {modOpen && (
         <ModModal

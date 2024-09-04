@@ -25,8 +25,9 @@ import {
   RowContainer,
 } from "../../components/formCustom";
 import { useParams } from "react-router-dom";
+import { imagePost } from "../../Utils/ImageUtils";
 
-const MemoryModal = ({ onClose }) => {
+const MemoryModal = ({ onClose, onMemoryAdded }) => {
   const { groupId } = useParams();
   // 권한 확인 모달 띄우기
   const [isOpen, setIsOpen] = useState(false);
@@ -36,9 +37,7 @@ const MemoryModal = ({ onClose }) => {
   const [content, setContent] = useState();
   const [postPassword, setPostPassword] = useState();
   const [groupPassword, setGroupPassword] = useState();
-  const [imageUrl, setImageUrl] = useState(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwyXeKDN29AmZgZPLS7n0Bepe8QmVappBwZCeA3XWEbWNdiDFB"
-  );
+  const [imageUrl, setImageUrl] = useState("");
   const [tags, setTags] = useState([]);
   const [location, setLocation] = useState();
   const [moment, setMoment] = useState();
@@ -46,8 +45,19 @@ const MemoryModal = ({ onClose }) => {
   const [currentTag, setCurrentTag] = useState("");
 
   // 파일 첨부
-  const handleFileChange = (e) => {
-    setImageUrl(e.target.files[0]);
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    setImageUrl(selectedFile);
+
+    try {
+      const response = await imagePost(selectedFile);
+      if (response && response.data) {
+        setImageUrl(response.data.imageUrl); // 서버에서 받은 URL을 file 상태에 설정
+        console.log("파일 업로드 후 URL:", response.data.imageUrl);
+      }
+    } catch (error) {
+      console.error("파일 업로드 실패:", error);
+    }
   };
 
   const handleFileButtonClick = () => {
@@ -74,6 +84,10 @@ const MemoryModal = ({ onClose }) => {
   const openModal = (e) => {
     e.preventDefault();
     setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
   };
 
   // 게시물 등록
@@ -107,7 +121,10 @@ const MemoryModal = ({ onClose }) => {
       );
       if (response) {
         console.log("게시물 등록: ", response);
-        setIsOpen(false);
+        if (onMemoryAdded) {
+          onMemoryAdded(); // 게시글 목록 갱신을 위해 콜백 호출
+        }
+        onClose();
       }
     } catch (error) {
       console.log("게시물 등록 실패: ", error);
@@ -233,6 +250,7 @@ const MemoryModal = ({ onClose }) => {
           onSubmit={handleBoardPost}
           value={groupPassword}
           onChange={(e) => setGroupPassword(e.target.value)}
+          onClose={closeModal}
         />
       )}
     </BackContainer>
@@ -243,6 +261,7 @@ export default MemoryModal;
 
 MemoryModal.propTypes = {
   onClose: PropTypes.func.isRequired,
+  onMemoryAdded: PropTypes.func,
 };
 
 const BackContainer = styled.div`
@@ -267,6 +286,10 @@ const OutContainer = styled.div`
   height: 80%;
   background-color: white;
   position: relative;
+
+  @media (min-width: 768px) and (max-width: 1199px) {
+    width: 100%;
+  }
 `;
 
 export const CloseIcon = styled.img`
@@ -278,10 +301,13 @@ export const CloseIcon = styled.img`
 
 const FormRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 90%;
   height: 80%;
+  @media (min-width: 768px) and (max-width: 1199px) {
+    width: 100%;
+  }
 `;
 
 const FormBody = styled.form`

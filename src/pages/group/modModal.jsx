@@ -26,27 +26,29 @@ import { groupPut } from "../../Utils/GroupUtils";
 import { CloseIcon } from "../memory/memoryModModal";
 import close from "../../assets/close.svg";
 import { useState } from "react";
+import { imagePost } from "../../Utils/ImageUtils";
 
 const ModModal = ({ data, onClose, onSave }) => {
-  // 그룹 정보 수정 상태 관리
-  // {
-  //   "name": "string",
-  //   "password": "string",
-  //   "imageUrl": "string",
-  //   "isPublic": true,
-  //   "introduction": "string"
-  // }
   const [name, setName] = useState(data.name);
   const [introduction, setIntroduction] = useState(data.introduction);
   const [password, setPassword] = useState(data.password);
-  const [imageUrl, setImageUrl] = useState(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwyXeKDN29AmZgZPLS7n0Bepe8QmVappBwZCeA3XWEbWNdiDFB"
-  );
+  const [imageUrl, setImageUrl] = useState(data.imageUrl);
   const [isPublic, setIsPublic] = useState(data.isPublic);
 
   // 파일 첨부
-  const handleFileChange = (e) => {
-    setImageUrl(e.target.files[0]);
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    setImageUrl(selectedFile);
+
+    try {
+      const response = await imagePost(selectedFile);
+      if (response && response.data) {
+        setImageUrl(response.data.imageUrl); // 서버에서 받은 URL을 file 상태에 설정
+        console.log("파일 업로드 후 URL:", response.data.imageUrl);
+      }
+    } catch (error) {
+      console.error("파일 업로드 실패:", error);
+    }
   };
 
   const handleFileButtonClick = () => {
@@ -100,7 +102,7 @@ const ModModal = ({ data, onClose, onSave }) => {
                 <HiddenFileInput
                   type="text"
                   placeholder="파일을 선택해 주세요"
-                  value={imageUrl ? imageUrl.name : ""}
+                  value={imageUrl ? imageUrl : ""}
                   readOnly
                 />
                 <FileButton onClick={handleFileButtonClick} type="button">
@@ -185,6 +187,11 @@ const OutContainer = styled.div`
   align-items: center;
   padding-top: 40px;
   box-sizing: border-box;
+  position: relative;
+
+  @media (min-width: 768px) and (max-width: 1199px) {
+    width: 50%;
+  }
 `;
 
 const MarginB = styled(ButtonCustom)`

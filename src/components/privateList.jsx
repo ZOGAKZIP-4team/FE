@@ -22,7 +22,7 @@ const PrivateList = ({ data }) => {
   const handleClick = () => {
     console.log("data 객체: ", data);
     //navigate(`/group/private/${data._id}`, {state: {dayCount}});
-    navigate(`/group/access/${data._id}`);
+    navigate(`/group/access/${data._id}`, { state: { dayCount } });
   };
 
   // createdAt을 Date 객체로 변환하고 현재 날짜와의 차이를 계산
@@ -63,7 +63,7 @@ PrivateList.propTypes = {
     isPublic: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     introduction: PropTypes.string.isRequired,
-    badgeCount: PropTypes.number.isRequired,
+
     likeCount: PropTypes.number.isRequired,
     postCount: PropTypes.number.isRequired,
     createdAt: PropTypes.string.isRequired,

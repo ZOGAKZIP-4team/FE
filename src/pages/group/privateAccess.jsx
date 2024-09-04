@@ -9,7 +9,7 @@ import {
 import ButtonCustom from "../../components/button";
 import PropTypes from "prop-types";
 import { groupAccessGet } from "../../Utils/GroupUtils";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { boardAccess } from "../../Utils/BoardUtils";
 
@@ -19,6 +19,9 @@ const PrivateAccess = ({ title, content, hint }) => {
   const [pwd, setPwd] = useState();
   const { groupId } = useParams();
   const { postId } = useParams();
+  // dayCount 넘겨주기
+  const location = useLocation();
+  const dayCount = location.state?.dayCount;
 
   // 접근 권한 확인
   const handleAccess = async () => {
@@ -27,7 +30,7 @@ const PrivateAccess = ({ title, content, hint }) => {
       console.log("비밀번호 확인: ", pwd);
       if (response) {
         console.log("그룹 접근 권한 확인 성공: ", response);
-        navigate(`/group/private/${groupId}`);
+        navigate(`/group/private/${groupId}`, { state: { dayCount } });
       }
     } catch (error) {
       console.log("그룹 접근 권한 확인 실패: ", error);
@@ -60,8 +63,10 @@ const PrivateAccess = ({ title, content, hint }) => {
   return (
     <OutContainer>
       <FormContainer>
-        <Title>{title}</Title>
-        <Content>{content}</Content>
+        <TitleContainer>
+          <Title>{title}</Title>
+          <Content>{content}</Content>
+        </TitleContainer>
         <FormBody onSubmit={handleSubmit}>
           <InputContainer>
             <Label>비밀번호 입력</Label>
@@ -91,7 +96,7 @@ const OutContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 100%;
+  max-width: 100vw;
   height: 100%;
   gap: 10px;
 `;
@@ -99,12 +104,18 @@ const OutContainer = styled.div`
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 420px;
-  height: 313px;
+  width: 25%;
+  height: 45%;
   align-items: center;
-  gap: 60px;
+  gap: 10%;
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  height: 30%;
+  flex-direction: column;
+  gap: 10%;
+`;
 const Content = styled.h1`
   font-size: 14px;
   font-weight: 400;
@@ -116,5 +127,5 @@ const FormBody = styled.form`
   align-items: center;
   width: 100%;
   height: 70%;
-  gap: 30px;
+  gap: 25%;
 `;

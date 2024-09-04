@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PublicDetail from "../../components/publicDetail";
 import MakeButton from "../../components/makeButton";
 import ModModal from "./modModal";
@@ -35,6 +35,19 @@ const PublicGroupDetail = () => {
     setDelOpen(true);
   };
 
+  // 그룹 삭제 모달 닫기
+  const closeDelModal = () => {
+    setDelPwd("");
+    setDelOpen(false);
+  };
+
+  const moveToMain = () => {
+    navigate("/");
+  };
+
+  // MemoryPublicGroup에 대한 레퍼런스 상태 관리
+  const memoryGroupRef = useRef();
+
   // 그룹 삭제하기
   const handleGroupDel = async () => {
     try {
@@ -42,19 +55,11 @@ const PublicGroupDetail = () => {
       console.log("id, password: ", groupId, delpwd);
       if (response) {
         console.log("그룹 삭제 성공: ", response);
-        closeDelModal();
       }
       return response;
     } catch (error) {
       console.log("그룹 삭제 실패: ", error);
     }
-  };
-
-  // 그룹 삭제 모달 닫기
-  const closeDelModal = () => {
-    setDelOpen(false);
-    setDelPwd("");
-    navigate("/");
   };
 
   // 그룹 수정 모달 닫기
@@ -91,7 +96,31 @@ const PublicGroupDetail = () => {
 
   const handleMemoryCloseModal = () => {
     setMemoryModal(false);
+    memoryGroupRef.current.handleNewMemoryAdded(); // 목록 업데이트
   };
+
+  // MemoryPublicGroup에서 알림을 받으면 그룹 상세 정보 다시 조회
+  const handleUpdateGroupDetail = () => {
+    handleGroupDetailGet();
+  };
+
+    // 추억이 성공적으로 추가되었을 때 호출될 함수
+  // const handleMemoryAdded = () => {
+  //   // 추억 개수를 증가시킴
+  //   setGroupDetail((prevDetail) => ({
+  //     ...prevDetail,
+  //     postCount: prevDetail.postCount + 1,
+  //   }));
+  // };
+
+  // 추억이 성공적으로 삭제되었을 때 호출될 함수
+  // const handleMemoryDeleted = () => {
+  //   // 추억 개수를 감소시킴
+  //   setGroupDetail((prevDetail) => ({
+  //     ...prevDetail,
+  //     postCount: prevDetail.postCount - 1,
+  //   }));
+  // };
 
   return (
     <OutContainer>
@@ -107,7 +136,7 @@ const PublicGroupDetail = () => {
           <Title>추억 목록</Title>
           <MakeButton title={"추억 올리기"} onClick={handleMemoryModal} />
         </TitleContainer>
-        <MemoryPublicGroup />
+        <MemoryPublicGroup ref={memoryGroupRef} onUpdateGroupDetail={handleUpdateGroupDetail}/>
       </BodyContainer>
       {modOpen && (
         <ModModal
@@ -126,9 +155,10 @@ const PublicGroupDetail = () => {
           onChange={(e) => setDelPwd(e.target.value)}
           onSubmit={handleGroupDel}
           onClose={closeDelModal}
+          main={moveToMain}
         />
       )}
-      {memoryModal && <MemoryModal onClose={handleMemoryCloseModal} />}
+      {memoryModal && <MemoryModal onClose={handleMemoryCloseModal} onMemoryAdded={handleMemoryAdded}/>}
     </OutContainer>
   );
 };

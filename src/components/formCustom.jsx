@@ -3,20 +3,30 @@ import ButtonCustom from "./button";
 import { useState } from "react";
 import { groupPost } from "../Utils/GroupUtils";
 import { useNavigate } from "react-router-dom";
+import { imagePost } from "../Utils/ImageUtils";
 
 const FormCustom = () => {
   // 상태 관리
   const [name, setName] = useState();
-  const [file, setFile] = useState(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwyXeKDN29AmZgZPLS7n0Bepe8QmVappBwZCeA3XWEbWNdiDFB"
-  );
+  const [file, setFile] = useState("");
   const [intro, setIntro] = useState();
   const [isPublic, setIsPublic] = useState(true);
   const [password, setPassword] = useState();
   const navigate = useNavigate();
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    try {
+      const response = await imagePost(selectedFile);
+      if (response && response.data) {
+        setFile(response.data.imageUrl); // 서버에서 받은 URL을 file 상태에 설정
+        console.log("파일 업로드 후 URL:", response.data.imageUrl);
+      }
+    } catch (error) {
+      console.error("파일 업로드 실패:", error);
+    }
   };
 
   const handleFileButtonClick = () => {
@@ -125,8 +135,10 @@ const OutContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
+  height: calc(100vh - 6.25rem - 1.25rem);
   padding-top: 1.25rem; /* 20px -> 1.25rem */
-  gap: 0.625rem; /* 10px -> 0.625rem */
+  box-sizing: border-box;
+  //gap: 0.525rem; /* 10px -> 0.625rem */
 `;
 
 export const FormContainer = styled.div`
@@ -135,7 +147,7 @@ export const FormContainer = styled.div`
   width: 26.25rem; /* 420px -> 26.25rem */
   height: 100%;
   align-items: center;
-  gap: 3.75rem; /* 60px -> 3.75rem */
+  gap: 5rem; // 폼과 버튼 사이
 `;
 
 export const Title = styled.h1`
@@ -146,10 +158,11 @@ export const Title = styled.h1`
 export const FormBody = styled.form`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 90%;
+  height: 75%; // 그룹 만들기 위치 조정
+  margin-top: 5%;
   gap: 1.875rem; /* 30px -> 1.875rem */
 `;
 
