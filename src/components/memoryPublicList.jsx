@@ -14,11 +14,6 @@ const MemoryPublicList = ({ data }) => {
     navigate(`/memory/${data._id}`);
   };
 
-  // createdAt을 Date 객체로 변환하고 현재 날짜와의 차이를 계산
-  //   const createdAt = new Date(data.createdAt);
-  //   const currentDate = new Date();
-  //   const timeDiff = Math.abs(currentDate - createdAt);
-  //   const dayCount = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
   return (
     <OuterContainer onClick={handleClick}>
       <PhotoContainer src={data.imageUrl} alt="이미지 준비 중" />
@@ -30,23 +25,33 @@ const MemoryPublicList = ({ data }) => {
         </DayContainer>
         <ContentInContainer>
           <Title>{data.title}</Title>
-          <Content>{data.tags}</Content>
+          <TagContainer>
+            {data.tags.map((tag, index) => (
+              <Tag key={index}>#{tag}</Tag>
+            ))}
+          </TagContainer>
         </ContentInContainer>
         <LookContainer>
-          <GetContainer>
-            <SmallContent>{data.location}</SmallContent>
-          </GetContainer>
-          <GetContainer>
-            <SmallContent>{data.moment.slice(0, 10)}</SmallContent>
-          </GetContainer>
-          <IconContainer>
-            <Icon src={smallIcon} />
-            <SmallContent>{data.likeCount}</SmallContent>
-          </IconContainer>
-          <IconContainer>
-            <Icon src={commentIcon} />
-            <SmallContent>{data.commentCount}</SmallContent>
-          </IconContainer>
+          <LeftContainer>
+            <GetContainer>
+              <SmallContent>{data.location}</SmallContent>
+            </GetContainer>
+            <GetContainer>
+              <SmallContent>
+                {data.moment.slice(0, 10).replace(/-/g, ".")}
+              </SmallContent>
+            </GetContainer>
+          </LeftContainer>
+          <RightContainer>
+            <IconContainer>
+              <Icon src={smallIcon} />
+              <MiddleContent>{data.likeCount}</MiddleContent>
+            </IconContainer>
+            <IconContainer>
+              <Icon src={commentIcon} />
+              <MiddleContent>{data.commentCount}</MiddleContent>
+            </IconContainer>
+          </RightContainer>
         </LookContainer>
       </ContentOutContainer>
     </OuterContainer>
@@ -100,7 +105,7 @@ const ContentOutContainer = styled.div`
 
 export const DayContainer = styled.div`
   display: flex;
-  width: 9rem; /* 91px */
+  width: 30%;
   height: 1.125rem; /* 18px */
   justify-content: space-between;
   align-items: center;
@@ -131,26 +136,42 @@ export const Title = styled.h1`
   margin: 0;
 `;
 
-const Content = styled.h1`
+const TagContainer = styled.div`
+  display: flex;
+  width: 60%;
+  height: 30%;
+  color: #B8B8B8;
+  font-size: 14px;
   font-weight: 400;
-  text-align: left;
-  font-size: 1rem; /* 16px */
-  margin: 0;
+  gap: 6px;
 `;
 
 export const LookContainer = styled.div`
   display: flex;
-  width: 12.4375rem; /* 199px */
-  height: 2.375rem; /* 38px */
+  width: 100%; /* 199px */
+  height: 20%;
   gap: 2.5rem; /* 40px */
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const GetContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 3.4375rem; /* 55px */
-  height: 2.375rem; /* 38px */
   gap: 0.3125rem; /* 5px */
+`;
+
+const LeftContainer = styled.div`
+  display: flex;
+  width: 35%;
+  gap: 10%;
+`;
+
+const RightContainer = styled.div`
+  display: flex;
+  width: 35%;
+  gap: 15%;
 `;
 
 export const SmallTitle = styled.h1`
@@ -165,6 +186,11 @@ export const SmallTitle = styled.h1`
 
 export const SmallContent = styled(SmallTitle)`
   color: #282828;
+  font-size: 12x;
+`;
+
+const MiddleContent = styled(SmallContent)`
+  font-size: 14px;
 `;
 
 export const IconContainer = styled.div`
@@ -179,4 +205,8 @@ export const Icon = styled.img`
   display: flex;
   width: 1.125rem; /* 18px */
   height: 1.125rem; /* 18px */
+`;
+
+const Tag = styled.span`
+  font-size: 14px;
 `;

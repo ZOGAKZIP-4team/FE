@@ -11,6 +11,7 @@ import ButtonCustom from "../../components/button";
 import PrivateList from "../../components/privateList";
 import { useCallback } from "react";
 import debounce from "lodash/debounce";
+import { useNavigate } from "react-router-dom";
 
 const PublicGroup = () => {
   const [list, setList] = useState([]);
@@ -21,7 +22,7 @@ const PublicGroup = () => {
   const [sortBy, setSortBy] = useState("latest");
 
   // 그룹 목록 조회
-  const handleGroupGet = async (searchKeyword) => {
+  const handleGroupGet = async (searchKeyword, page) => {
     try {
       const response = await groupGet(
         page,
@@ -32,7 +33,11 @@ const PublicGroup = () => {
       );
       if (response && response.data) {
         console.log("그룹 목록 조회 성공: ", response);
-        setList(response.data);
+        if (page == 1) {
+          setList(response.data);
+        } else {
+          setList((prevList) => [...prevList, ...response.data]);
+        }
       }
     } catch (error) {
       console.log("그룹 목록 조회 실패: ", error);
@@ -42,17 +47,34 @@ const PublicGroup = () => {
   // 검색 요청을 디바운스 처리
   const debouncedSearch = useCallback(
     debounce((searchTerm) => {
-      handleGroupGet(searchTerm);
+      handleGroupGet(searchTerm, page);
     }, 500), // 500ms 지연
-    [isPublicFilter, sortBy]
+    [isPublicFilter, sortBy, page]
   );
 
   useEffect(() => {
     debouncedSearch(keyword);
   }, [keyword, debouncedSearch]);
 
+  // useEffect(() => {
+  //   handleGroupGet(keyword, page); // 페이지가 변경될 때마다 새로운 데이터를 가져옴
+  // }, [page, isPublicFilter, sortBy]);
+
   // 필터링된 리스트
   const filteredList = list.filter((item) => item.isPublic === isPublicFilter);
+
+  // 페이지 증가
+  const handleLoadMore = () => {
+    console.log("클릭");
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  const navigate = useNavigate();
+
+  // 그룹 만들기 페이지 이동
+  const moveToMakeGroup = () => {
+    navigate("/group/create");
+  };
 
   return (
     <OutContaienr>
@@ -81,7 +103,7 @@ const PublicGroup = () => {
         {filteredList.length === 0 ? (
           <InnerContainer>
             <Notice src={noneGroup} />
-            <ButtonCustom title={"그룹 만들기"} />
+            <ButtonCustom title={"그룹 만들기"} onClick={moveToMakeGroup} />
           </InnerContainer>
         ) : (
           filteredList.map((item, index) =>
@@ -93,7 +115,7 @@ const PublicGroup = () => {
           )
         )}
       </BodyContainer>
-      <AddViewButton />
+      <AddViewButton onClick={handleLoadMore} />
     </OutContaienr>
   );
 };
@@ -110,7 +132,7 @@ export const OutContaienr = styled.div`
 `;
 export const TopContainer = styled.div`
   display: flex;
-  width: 90%;
+  width: 82%;
   height: 50px;
   gap: 30px;
 `;
@@ -134,7 +156,7 @@ export const BtnSearchContainer = styled.div`
 
 export const BodyContainer = styled.div`
   display: flex;
-  width: 95%;
+  width: 82%;
   height: 100%;
   justify-content: center;
   align-items: center;

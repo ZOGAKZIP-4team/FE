@@ -23,6 +23,7 @@ import {
 import ButtonCustom from "../../components/button";
 import PropTypes from "prop-types";
 import close from "../../assets/close.svg";
+import { imagePost } from "../../Utils/ImageUtils";
 
 const MemoryModModal = ({ data, onClose, onSave }) => {
   // 추억 올리기 값 상태 관리
@@ -30,9 +31,7 @@ const MemoryModModal = ({ data, onClose, onSave }) => {
   const [title, setTitle] = useState(data.title);
   const [content, setContent] = useState(data.content);
   const [postPassword, setPostPassword] = useState(data.postPassword);
-  const [imageUrl, setImageUrl] = useState(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwyXeKDN29AmZgZPLS7n0Bepe8QmVappBwZCeA3XWEbWNdiDFB"
-  );
+  const [imageUrl, setImageUrl] = useState(data.imageUrl);
   const [tags, setTags] = useState(data.tags || []);
   const [location, setLocation] = useState(data.location);
   const [moment, setMoment] = useState(data.moment);
@@ -40,8 +39,19 @@ const MemoryModModal = ({ data, onClose, onSave }) => {
   const [currentTag, setCurrentTag] = useState("");
 
   // 파일 첨부
-  const handleFileChange = (e) => {
-    setImageUrl(e.target.files[0]);
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    setImageUrl(selectedFile);
+
+    try {
+      const response = await imagePost(selectedFile);
+      if (response && response.data) {
+        setImageUrl(response.data.imageUrl); // 서버에서 받은 URL을 file 상태에 설정
+        console.log("파일 업로드 후 URL:", response.data.imageUrl);
+      }
+    } catch (error) {
+      console.error("파일 업로드 실패:", error);
+    }
   };
 
   const handleFileButtonClick = () => {
@@ -257,6 +267,12 @@ const OutContainer = styled.div`
   height: 80%;
   background-color: white;
   position: relative;
+  padding: 3% 0;
+  border-radius: 6px;
+
+  @media (min-width: 768px) and (max-width: 1199px) {
+    width: 100%;
+  }
 `;
 
 export const CloseIcon = styled.img`

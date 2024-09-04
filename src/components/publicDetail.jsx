@@ -6,14 +6,21 @@ import next from "../assets/next.svg";
 import smallIcon from "../assets/smallIcon.svg";
 //import publicImg from "../assets/publicImg.svg";
 import { groupLike } from "../Utils/GroupUtils";
+import { useState } from "react";
 
 const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
+  // 공감하기 클릭 시 상태 변화
+  const [likeC, setLikeC] = useState(data.likeCount || 0);
+  // 추억 업로드 시 상태 변화
+  //const [postC, setPostC] = useState(data.postCount || 0);
+
   // 그룹 공감하기
   const handleGroupLike = async () => {
     try {
       const response = await groupLike(data._id);
       if (response) {
         console.log("그룹 공감 성공: ", response);
+        setLikeC((prevCount) => prevCount + 1);
       }
     } catch (error) {
       console.log("그룹 공감 실패: ", error);
@@ -42,19 +49,23 @@ const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
           </TopContainer>
           <TitleContainer>
             <Title>{data.name}</Title>
-            <NoticeContainer1>추억 {data.postCount}</NoticeContainer1>
-            <img src={seperate} />
-            <NoticeContainer1>그룹 공감 {data.likeCount}</NoticeContainer1>
+            <RightContainer>
+              <NoticeContainer1>추억 {data.postCount}</NoticeContainer1>
+              <img src={seperate} />
+              <NoticeContainer1>그룹 공감 {likeC}</NoticeContainer1>
+            </RightContainer>
           </TitleContainer>
           <Content>{data.introduction}</Content>
         </ContentContainer>
         <BadgeContainer>
           <BadgeTitle>획득 배지</BadgeTitle>
           <Badges>
-            {data.badges.map((badge, index) => (
-              <BadgeButton key={index}>{badge}</BadgeButton>
-            ))}
-            <NextButton src={next} />
+            {data.badges &&
+              data.badges.length > 0 &&
+              data.badges.map((badge, index) => (
+                <BadgeButton key={index}>{badge}</BadgeButton>
+              ))}
+            {data.badges && data.badges.length > 0 && <NextButton src={next} />}
           </Badges>
         </BadgeContainer>
         <SendButton onClick={handleGroupLike}>
@@ -159,6 +170,13 @@ const TitleContainer = styled(TopContainer)`
   height: 2.375rem; /* 38px -> 2.375rem */
 `;
 
+const RightContainer = styled.div`
+  display: flex;
+  width: 15rem; /* 224px -> 14rem */
+  height: 1rem;
+  justify-content: space-between;
+`;
+
 const Title = styled.h1`
   font-size: 1.875rem; /* 30px -> 1.875rem */
   font-weight: 700;
@@ -200,6 +218,10 @@ const Badges = styled.div`
   height: 3.25rem; /* 52px -> 3.25rem */
   gap: 0.625rem; /* 10px -> 0.625rem */
   position: relative;
+
+  @media (min-width: 768px) and (max-width: 1199px) {
+    width: 70%;
+  }
 `;
 
 const BadgeButton = styled.button`

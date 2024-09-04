@@ -15,6 +15,7 @@ const Modal = ({
   onChange,
   onSubmit,
   onClose,
+  main,
 }) => {
   return (
     <BackContainer>
@@ -25,6 +26,10 @@ const Modal = ({
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit();
+            onClose();
+            if (typeof main === "function") {
+              main(); // main이 함수인 경우에만 호출
+            }
           }}
         >
           <InputContainer>
@@ -51,6 +56,10 @@ const OutContainer = styled.div`
   background-color: white;
   border-radius: 6px;
   position: relative;
+
+  @media (min-width: 768px) and (max-width: 1199px) {
+    width: 50%;
+  }
 `;
 
 const FormBody = styled.form`
@@ -67,8 +76,9 @@ Modal.propTypes = {
   label: PropTypes.string.isRequired,
   hint: PropTypes.string.isRequired,
   btn: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  main: PropTypes.func,
 };
