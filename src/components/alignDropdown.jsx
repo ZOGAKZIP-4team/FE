@@ -38,10 +38,10 @@ const DropDown = ({ onSelect }) => {
             selected={selectedItem === "최신순"}
           />
           <DropDownItem
-            item="댓글순"
+            item="추억순"
             value="mostPosted"
             onClick={handleItemClick}
-            selected={selectedItem === "댓글순"}
+            selected={selectedItem === "추억순"}
           />
           <DropDownItem
             item="공감순"
@@ -91,21 +91,23 @@ const DropDownHeader = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  max-width: 160px;
+  width: 160px;
   max-height: 45px;
   padding: 10px 19px;
+  box-sizing: border-box;
 `;
 
 const DropDownList = styled.ul`
   position: absolute;
   margin-top: 0.0625rem;
   width: 160px;
-  height: 125px;
+  height: 127px;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #282828;
   border-radius: 6px;
   padding: 0;
+  box-sizing: border-box;
 `;
 
 const DropDownItemContainer = styled.li`
