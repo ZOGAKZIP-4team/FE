@@ -6,9 +6,10 @@ import next from "../assets/next.svg";
 import smallIcon from "../assets/smallIcon.svg";
 //import publicImg from "../assets/publicImg.svg";
 import { groupLike } from "../Utils/GroupUtils";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
+  const badgesRef = useRef(null); // 배지 영역에 대한 참조를 생성
   // 공감하기 클릭 시 상태 변화
   const [likeC, setLikeC] = useState(data.likeCount || 0);
   // 추억 업로드 시 상태 변화
@@ -30,6 +31,17 @@ const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
   if (!data) {
     return <div>Loading...</div>;
   }
+
+  // next 버튼 클릭 시 스크롤 이동
+  const handleNextClick = () => {
+    console.log("next 버튼 클릭");
+    if (badgesRef.current) {
+      badgesRef.current.scrollBy({
+        left: 200, // 스크롤할 픽셀 양 (배지 2~3개씩 보이도록 설정)
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <OutContainer>
@@ -59,14 +71,16 @@ const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
         </ContentContainer>
         <BadgeContainer>
           <BadgeTitle>획득 배지</BadgeTitle>
-          <Badges>
+          <Badges ref={badgesRef}> {/* Badges에 ref 연결 */}
             {data.badges &&
               data.badges.length > 0 &&
               data.badges.map((badge, index) => (
                 <BadgeButton key={index}>{badge}</BadgeButton>
               ))}
-            {data.badges && data.badges.length > 0 && <NextButton src={next} />}
           </Badges>
+          {data.badges && data.badges.length > 0 && (
+            <NextButton src={next} onClick={handleNextClick} />  // NextButton이 BadgeContainer 안에 있지만 위치는 고정
+          )}
         </BadgeContainer>
         <SendButton onClick={handleGroupLike}>
           <img
@@ -162,7 +176,7 @@ const BadgeContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 80%; /* 994px -> 62.125rem */
-  height: 5.5rem; /* 82px -> 5.125rem */
+  height: 6.5rem; /* 82px -> 5.125rem */
   gap: 1.7rem; /* 20px -> 1.25rem */
 `;
 
@@ -218,9 +232,19 @@ const Badges = styled.div`
   height: 3.25rem; /* 52px -> 3.25rem */
   gap: 0.625rem; /* 10px -> 0.625rem */
   position: relative;
+  overflow: hidden;
+  scroll-behavior: smooth; /* 스크롤이 부드럽게 이동 */
+  white-space: nowrap; /* 배지가 한 줄에 나열되도록 설정 */
+  &::-webkit-scrollbar {
+    display: none; /* 스크롤바 숨김 */
+  }
 
   @media (min-width: 768px) and (max-width: 1199px) {
-    width: 70%;
+    width: 80%;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1776px) {
+    width: 90%;
   }
 `;
 
@@ -238,15 +262,20 @@ const BadgeButton = styled.button`
 const NextButton = styled.img`
   display: flex;
   position: absolute;
-  right: 0;
+  right: 22%;
+  bottom: 2%;
   cursor: pointer;
+  @media (max-width: 900px) {
+    right: 30%;
+  }
+  z-index: 10;
 `;
 
 const SendButton = styled.button`
   display: flex;
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: 2%;
   width: 11.75rem; /* 188px -> 11.75rem */
   height: 3.25rem; /* 52px -> 3.25rem */
   padding: 0.9375rem 2.1875rem; /* 15px 35px -> 0.9375rem 2.1875rem */
@@ -257,4 +286,8 @@ const SendButton = styled.button`
   background-color: transparent;
   align-items: center;
   gap: 0.625rem; /* 10px -> 0.625rem */
+  @media (max-width: 1300px) {
+    bottom: 30%;
+    right: 5%;
+  }
 `;

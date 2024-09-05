@@ -3,7 +3,7 @@ import { DayContainer, Day, PublicY } from "../../components/publicList";
 import seperate from "../../assets/seperate.svg";
 import smallIcon from "../../assets/smallIcon.svg";
 import commentIcon from "../../assets/CommentIcon.svg";
-import ButtonCustom, { ButtonMemory } from "../../components/button";
+import { ButtonMemory } from "../../components/button";
 import arrowRight from "../../assets/arrowRight.svg";
 import pen from "../../assets/Pen.svg";
 import trashBin from "../../assets/trashBin.svg";
