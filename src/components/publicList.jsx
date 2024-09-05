@@ -11,6 +11,7 @@ const PublicList = ({ data }) => {
   const handleClick = () => {
     console.log("data 객체: ", data);
     navigate(`/group/public/${data._id}`, { state: { dayCount } });
+    //console.log("dayCount: ", dayCount);
   };
   // badges가 비어있으면 0
   const badgeCount = Array.isArray(data.badges) ? data.badges.length : 0;

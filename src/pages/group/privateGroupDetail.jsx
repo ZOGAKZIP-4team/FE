@@ -53,6 +53,7 @@ const PrivateGroupDetail = () => {
       if (response) {
         console.log("그룹 삭제 성공: ", response);
         closeDelModal();
+        navigate("/");
       }
       return response;
     } catch (error) {
@@ -64,7 +65,6 @@ const PrivateGroupDetail = () => {
   const closeDelModal = () => {
     setDelOpen(false);
     setDelPwd("");
-    navigate("/");
   };
 
   // 그룹 수정 모달 닫기

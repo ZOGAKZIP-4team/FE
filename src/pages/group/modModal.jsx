@@ -34,6 +34,7 @@ const ModModal = ({ data, onClose, onSave }) => {
   const [password, setPassword] = useState(data.password);
   const [imageUrl, setImageUrl] = useState(data.imageUrl);
   const [isPublic, setIsPublic] = useState(data.isPublic);
+  const [groupId, setGroupId] = useState(data._id);
 
   // 파일 첨부
   const handleFileChange = async (e) => {
@@ -60,7 +61,7 @@ const ModModal = ({ data, onClose, onSave }) => {
     e.preventDefault();
     try {
       const response = await groupPut(
-        data._id,
+        groupId,
         name,
         password,
         imageUrl,
@@ -70,6 +71,8 @@ const ModModal = ({ data, onClose, onSave }) => {
       if (response) {
         console.log("그룹 수정: ", response);
         onSave({ name, password, imageUrl, isPublic, introduction });
+        setGroupId(response._id);
+        onClose();
       }
     } catch (error) {
       console.log("그룹 수정 실패: ", error);
@@ -185,12 +188,15 @@ const OutContainer = styled.div`
   border-radius: 6px;
   justify-content: center;
   align-items: center;
-  padding-top: 40px;
+  padding: 2%;
   box-sizing: border-box;
   position: relative;
 
   @media (min-width: 768px) and (max-width: 1199px) {
     width: 50%;
+  }
+  @media (min-width: 1200px) and (max-width: 1700px) {
+    width: 40%;
   }
 `;
 

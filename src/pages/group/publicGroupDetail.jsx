@@ -27,7 +27,9 @@ const PublicGroupDetail = () => {
 
   // 그룹 수정 모달 띄우기
   const openModModal = () => {
-    setModOpen(true);
+    if(groupDetail){
+      setModOpen(true);
+    }
   };
 
   // 그룹 삭제 모달 띄우기
@@ -103,25 +105,7 @@ const PublicGroupDetail = () => {
   const handleUpdateGroupDetail = () => {
     handleGroupDetailGet();
   };
-
-    // 추억이 성공적으로 추가되었을 때 호출될 함수
-  // const handleMemoryAdded = () => {
-  //   // 추억 개수를 증가시킴
-  //   setGroupDetail((prevDetail) => ({
-  //     ...prevDetail,
-  //     postCount: prevDetail.postCount + 1,
-  //   }));
-  // };
-
-  // 추억이 성공적으로 삭제되었을 때 호출될 함수
-  // const handleMemoryDeleted = () => {
-  //   // 추억 개수를 감소시킴
-  //   setGroupDetail((prevDetail) => ({
-  //     ...prevDetail,
-  //     postCount: prevDetail.postCount - 1,
-  //   }));
-  // };
-
+  
   return (
     <OutContainer>
       <BodyContainer>
@@ -158,7 +142,7 @@ const PublicGroupDetail = () => {
           main={moveToMain}
         />
       )}
-      {memoryModal && <MemoryModal onClose={handleMemoryCloseModal} onMemoryAdded={handleMemoryAdded}/>}
+      {memoryModal && <MemoryModal onClose={handleMemoryCloseModal}/>}
     </OutContainer>
   );
 };

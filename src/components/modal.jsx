@@ -56,9 +56,14 @@ const OutContainer = styled.div`
   background-color: white;
   border-radius: 6px;
   position: relative;
+  padding: 0 2%;
 
   @media (min-width: 768px) and (max-width: 1199px) {
     width: 50%;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1700px) {
+    width: 40%;
   }
 `;
 
