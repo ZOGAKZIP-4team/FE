@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ButtonCustom from "../../components/button";
+import { ButtonMemory } from "../../components/button";
 import close from "../../assets/close.svg";
 import Modal from "../../components/modal";
 import { boardPost } from "../../Utils/BoardUtils";
@@ -215,7 +215,7 @@ const MemoryModal = ({ onClose, onMemoryAdded }) => {
                 />
               </InputContainer>
               <SelectContainer>
-                <Label>그룹 공개 선택</Label>
+                <Label>추억 공개 선택</Label>
                 <RowContainer>
                   <SmallText>공개</SmallText>
                   <ToggleSwitch>
@@ -238,7 +238,7 @@ const MemoryModal = ({ onClose, onMemoryAdded }) => {
               </InputContainer>
             </Form>
           </FormRow>
-          <ButtonCustom title={"올리기"} onClick={openModal} />
+          <ButtonMemory title={"올리기"} onClick={openModal} />
         </FormBody>
       </OutContainer>
       {isOpen && (
@@ -289,6 +289,10 @@ const OutContainer = styled.div`
 
   @media (min-width: 768px) and (max-width: 1199px) {
     width: 100%;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1700px) {
+    width: 80%;
   }
 `;
 

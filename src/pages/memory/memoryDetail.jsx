@@ -8,7 +8,7 @@ import arrowRight from "../../assets/arrowRight.svg";
 import pen from "../../assets/Pen.svg";
 import trashBin from "../../assets/trashBin.svg";
 import { useNavigate, useParams } from "react-router-dom";
-import { boardDel, boardDetailGet, boardIsPublic, boardLike } from "../../Utils/BoardUtils";
+import { boardDel, boardDetailGet, boardLike } from "../../Utils/BoardUtils";
 import { useEffect, useState } from "react";
 import MemoryModModal from "./memoryModModal";
 import Modal from "../../components/modal";
@@ -692,7 +692,7 @@ Comment.propTypes = {
 const CommentOutContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 75%;
   height: 100%;
   gap: 20px;
 `;

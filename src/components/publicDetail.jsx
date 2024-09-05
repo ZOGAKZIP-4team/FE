@@ -50,7 +50,7 @@ const PublicDetail = ({ onModModal, onDelModal, data, dayCount }) => {
           <TitleContainer>
             <Title>{data.name}</Title>
             <RightContainer>
-              <NoticeContainer1>추억 {data.postCount}</NoticeContainer1>
+              <NoticeContainer1>추억 {data.postCount || 0}</NoticeContainer1>
               <img src={seperate} />
               <NoticeContainer1>그룹 공감 {likeC}</NoticeContainer1>
             </RightContainer>

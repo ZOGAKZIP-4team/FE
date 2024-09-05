@@ -7,11 +7,11 @@ import { imagePost } from "../Utils/ImageUtils";
 
 const FormCustom = () => {
   // 상태 관리
-  const [name, setName] = useState();
+  const [name, setName] = useState("");
   const [file, setFile] = useState("");
-  const [intro, setIntro] = useState();
+  const [intro, setIntro] = useState("");
   const [isPublic, setIsPublic] = useState(true);
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleFileChange = async (e) => {
@@ -139,15 +139,20 @@ const OutContainer = styled.div`
   padding-top: 1.25rem; /* 20px -> 1.25rem */
   box-sizing: border-box;
   //gap: 0.525rem; /* 10px -> 0.625rem */
+
+  @media (max-height: 825px) {
+    height: 100vh;
+    padding-bottom: 10%;
+  }
 `;
 
 export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 26.25rem; /* 420px -> 26.25rem */
+  width: 100%; /* 420px -> 26.25rem */
   height: 100%;
   align-items: center;
-  gap: 5rem; // 폼과 버튼 사이
+  gap: 3rem; // 폼과 버튼 사이
 `;
 
 export const Title = styled.h1`
@@ -161,7 +166,7 @@ export const FormBody = styled.form`
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 75%; // 그룹 만들기 위치 조정
+  height: auto; // 그룹 만들기 위치 조정
   margin-top: 5%;
   gap: 1.875rem; /* 30px -> 1.875rem */
 `;
@@ -169,7 +174,7 @@ export const FormBody = styled.form`
 export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25rem; /* 400px -> 25rem */
+  width: 100%; /* 400px -> 25rem */
   height: 5.3125rem; /* 85px -> 5.3125rem */
 `;
 
@@ -182,7 +187,7 @@ export const Label = styled.h1`
 
 export const InputBody = styled.input`
   display: flex;
-  width: 25rem; /* 400px -> 25rem */
+  width: 100%; /* 400px -> 25rem */
   height: 2.8125rem; /* 45px -> 2.8125rem */
   border: 1px solid #dddddd;
   border-radius: 6px;
@@ -202,18 +207,19 @@ export const HiddenFileInput = styled(InputBody)`
 
 export const FileContainer = styled.div`
   display: flex;
-  width: 25rem; /* 400px -> 25rem */
+  width: 100%; /* 400px -> 25rem */
   height: 2.8125rem; /* 45px -> 2.8125rem */
   justify-content: space-between;
+  gap: 5%;
 `;
 
 export const FileInput = styled(InputBody)`
-  display: none;
+  display: none; 
 `;
 
 export const FileButton = styled.button`
   display: flex;
-  width: 6.25rem; /* 100px -> 6.25rem */
+  width: 27%; /* 100px -> 6.25rem */
   height: 2.8125rem; /* 45px -> 2.8125rem */
   border: 1px solid #282828;
   border-radius: 6px;
@@ -226,13 +232,13 @@ export const FileButton = styled.button`
 export const TextareaContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25rem; /* 400px -> 25rem */
+  width: 100%; /* 400px -> 25rem */
   height: 9.375rem; /* 150px -> 9.375rem */
 `;
 
 export const TextareaBody = styled.textarea`
   display: flex;
-  width: 25rem; /* 400px -> 25rem */
+  width: 100%; /* 400px -> 25rem */
   height: 7.5rem; /* 120px -> 7.5rem */
   border: 1px solid #dddddd;
   border-radius: 6px;

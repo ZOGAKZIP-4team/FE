@@ -196,7 +196,7 @@ const MemoryModModal = ({ data, onClose, onSave }) => {
                 />
               </InputContainer>
               <SelectContainer>
-                <Label>그룹 공개 선택</Label>
+                <Label>추억 공개 선택</Label>
                 <RowContainer>
                   <SmallText>공개</SmallText>
                   <ToggleSwitch>
@@ -210,9 +210,9 @@ const MemoryModModal = ({ data, onClose, onSave }) => {
                 </RowContainer>
               </SelectContainer>
               <InputContainer>
-                <Label>비밀번호 생성</Label>
+                <Label>수정 권한 인증</Label>
                 <InputBody
-                  placeholder="추억 비밀번호를 생성해 주세요"
+                  placeholder="수정 권한을 인증해 주세요"
                   value={postPassword}
                   onChange={(e) => setPostPassword(e.target.value)}
                 />
@@ -264,7 +264,7 @@ const OutContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 55%;
-  height: 80%;
+  height: auto; // 수정하기 버튼이 위로 안 오게
   background-color: white;
   position: relative;
   padding: 3% 0;
@@ -272,6 +272,7 @@ const OutContainer = styled.div`
 
   @media (min-width: 768px) and (max-width: 1199px) {
     width: 100%;
+    height: auto;
   }
 `;
 
@@ -284,10 +285,10 @@ export const CloseIcon = styled.img`
 
 const FormRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 90%;
-  height: 80%;
+  gap: 10%;
 `;
 
 const FormBody = styled.form`
@@ -296,14 +297,14 @@ const FormBody = styled.form`
   align-items: center;
   width: 100%;
   height: 100%;
-  justify-content: space-between;
+  gap: 30px;
 `;
 
 const Form = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
-  height: 90%;
+  width: 45%;
+  height: 100%;
   gap: 30px;
 `;
 

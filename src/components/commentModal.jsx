@@ -123,6 +123,14 @@ export const OutContainer = styled.div`
   padding-top: 2%;
   box-sizing: border-box;
   position: relative;
+  
+  @media (min-width: 768px) and (max-width: 1199px) {
+    width: 50%;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1700px) {
+    width: 40%;
+  }
 `;
 
 export const MarginB = styled(ButtonCustom)`

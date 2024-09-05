@@ -9,13 +9,22 @@ const ButtonCustom = ({ title, ...props }) => {
   );
 };
 
+
+export const ButtonMemory = ({ title, ...props }) => {
+  return (
+    <OutC {...props}>
+      <Text>{title}</Text>
+    </OutC>
+  );
+};
+
 export default ButtonCustom;
 
 const OutContainer = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 400px;
+  width: 100%;
   height: 50px;
   border: none;
   border-radius: 6px;
@@ -33,3 +42,12 @@ const Text = styled.h1`
 ButtonCustom.propTypes = {
   title: PropTypes.string.isRequired,
 };
+
+ButtonMemory.propTypes = {
+  title: PropTypes.string.isRequired,
+};
+
+
+const OutC = styled(OutContainer)`
+  width: 40%;
+`;
