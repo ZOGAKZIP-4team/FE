@@ -120,10 +120,10 @@ export const OutContainer = styled.div`
   border-radius: 6px;
   justify-content: center;
   align-items: center;
-  padding-top: 2%;
+  padding: 2%;
   box-sizing: border-box;
   position: relative;
-  
+
   @media (min-width: 768px) and (max-width: 1199px) {
     width: 50%;
   }
