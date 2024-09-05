@@ -3,7 +3,7 @@ import { DayContainer, Day, PublicY } from "../../components/publicList";
 import seperate from "../../assets/seperate.svg";
 import smallIcon from "../../assets/smallIcon.svg";
 import commentIcon from "../../assets/CommentIcon.svg";
-import ButtonCustom from "../../components/button";
+import ButtonCustom, { ButtonMemory } from "../../components/button";
 import arrowRight from "../../assets/arrowRight.svg";
 import pen from "../../assets/Pen.svg";
 import trashBin from "../../assets/trashBin.svg";
@@ -300,8 +300,9 @@ const MemoryDetail = () => {
       <MainContainer>
         <PhotoContainer src={memoryDetail.imageUrl} />
         <Main>{memoryDetail.content}</Main>
+        <ButtonMemory title={"댓글 등록하기"} onClick={openCommentModal} />
       </MainContainer>
-      <ButtonCustom title={"댓글 등록하기"} onClick={openCommentModal} />
+      
       <Comment
         data={commentList}
         totalItemCount={totalItemCount}

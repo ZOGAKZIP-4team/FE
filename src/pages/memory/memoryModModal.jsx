@@ -20,7 +20,7 @@ import {
   ToggleSwitch,
   Slider,
 } from "../../components/formCustom";
-import ButtonCustom from "../../components/button";
+import { ButtonMemory } from "../../components/button";
 import PropTypes from "prop-types";
 import close from "../../assets/close.svg";
 import { imagePost } from "../../Utils/ImageUtils";
@@ -219,7 +219,7 @@ const MemoryModModal = ({ data, onClose, onSave }) => {
               </InputContainer>
             </Form>
           </FormRow>
-          <ButtonCustom title={"수정하기"} type="submit" />
+          <ButtonMemory title={"수정하기"} type="submit" />
         </FormBody>
       </OutContainer>
     </BackContainer>

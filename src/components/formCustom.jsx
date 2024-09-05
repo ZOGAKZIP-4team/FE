@@ -54,7 +54,7 @@ const FormCustom = () => {
   return (
     <OutContainer>
       <Title>그룹 만들기</Title>
-      <FormContainer>
+      <FormC>
         <FormBody>
           <InputContainer>
             <Label>그룹명</Label>
@@ -119,7 +119,7 @@ const FormCustom = () => {
           type="submit"
           onClick={handleGroupPost}
         />
-      </FormContainer>
+      </FormC>
     </OutContainer>
   );
 };
@@ -153,6 +153,19 @@ export const FormContainer = styled.div`
   height: 100%;
   align-items: center;
   gap: 3rem; // 폼과 버튼 사이
+`;
+
+export const FormC = styled.div` // 그룹 만들기만을 위함
+  display: flex;
+  flex-direction: column;
+  width: 23%; /* 420px -> 26.25rem */
+  height: 100%;
+  align-items: center;
+  gap: 3rem; // 폼과 버튼 사이
+
+   @media (max-width: 1500px) {
+    width: 40%;
+  }
 `;
 
 export const Title = styled.h1`
@@ -254,7 +267,7 @@ export const TextareaBody = styled.textarea`
 export const SelectContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25rem; /* 400px -> 25rem */
+  width: 100%; /* 400px -> 25rem */
   height: 4rem; /* 64px -> 4rem */
 `;
 
